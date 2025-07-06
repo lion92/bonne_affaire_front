@@ -1,108 +1,320 @@
-/* Conteneur principal */
+/* Variables CSS */
+:root {
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --primary-light: #dbeafe;
+    --success: #10b981;
+    --success-light: #d1fae5;
+    --error: #ef4444;
+    --error-light: #fee2e2;
+    --warning: #f59e0b;
+    --warning-light: #fef3c7;
+    --text: #1f2937;
+    --text-light: #6b7280;
+    --text-muted: #9ca3af;
+    --border: #d1d5db;
+    --border-focus: #3b82f6;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --radius: 12px;
+    --transition: all 0.2s ease;
+}
+
+/* Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    color: var(--text);
+    background: var(--bg);
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Container principal */
 .containerInscription {
     display: flex;
-    flex-direction: column;
     align-items: center;
+    justify-content: center;
     padding: 2rem;
     min-height: 100vh;
-    background: linear-gradient(to bottom right, #f0f0f0, #dcdcdc);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 /* Carte du formulaire */
 .form-card {
-    background: #fff;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    max-width: 400px;
+    background: var(--card);
+    padding: 2.5rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    max-width: 420px;
     width: 100%;
-    box-sizing: border-box;
+    transition: var(--transition);
+}
+
+.form-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
 /* Titre */
 .form-card h2 {
     text-align: center;
+    margin-bottom: 2rem;
+    color: var(--text);
+    font-size: 1.875rem;
+    font-weight: 700;
+    position: relative;
+}
+
+.form-card h2::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), #8b5cf6);
+    border-radius: 2px;
+}
+
+/* Groupe d'input */
+.input-group {
+    position: relative;
     margin-bottom: 1.5rem;
-    color: #333;
+}
+
+.input-group label {
+    position: absolute;
+    top: 0.875rem;
+    left: 1rem;
+    color: var(--text-muted);
+    font-size: 1rem;
+    transition: var(--transition);
+    pointer-events: none;
+    background: var(--card);
+    padding: 0 0.25rem;
 }
 
 /* Inputs */
 .form-card input {
     width: 100%;
-    padding: 0.75rem;
-    margin-bottom: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
+    padding: 0.875rem 1rem;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
     font-size: 1rem;
-    transition: border-color 0.2s;
+    transition: var(--transition);
+    background: var(--card);
+    color: var(--text);
+    font-family: inherit;
 }
 
 .form-card input:focus {
-    border-color: #007bff;
+    border-color: var(--border-focus);
     outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-/* Erreurs */
-.error {
-    color: #d9534f;
+/* Label flottant */
+.form-card input:focus + label,
+.form-card input:not(:placeholder-shown) + label {
+    top: -0.5rem;
+    left: 1rem;
     font-size: 0.875rem;
-    margin: 0 0 0.5rem;
+    color: var(--border-focus);
+    font-weight: 500;
 }
 
-/* Messages succès / erreur */
+/* États des inputs */
+.form-card input.error {
+    border-color: var(--error);
+    background: var(--error-light);
+}
+
+.form-card input.error:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.form-card input.success {
+    border-color: var(--success);
+    background: var(--success-light);
+}
+
+/* Messages d'erreur */
+.error {
+    color: var(--error);
+    font-size: 0.875rem;
+    margin: 0.5rem 0 0 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.error::before {
+    content: '⚠️';
+    font-size: 0.75rem;
+}
+
+/* Messages de succès */
 .success-message {
-    color: #28a745;
-    font-size: 0.9rem;
+    color: var(--success);
+    font-size: 0.875rem;
     margin: 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: var(--success-light);
+    border-radius: var(--radius);
+    border-left: 4px solid var(--success);
 }
 
+.success-message::before {
+    content: '✅';
+    font-size: 0.875rem;
+}
+
+/* Messages d'erreur généraux */
 .error-message {
-    color: #d9534f;
-    font-size: 0.9rem;
+    color: var(--error);
+    font-size: 0.875rem;
     margin: 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: var(--error-light);
+    border-radius: var(--radius);
+    border-left: 4px solid var(--error);
 }
 
-/* Info message */
+.error-message::before {
+    content: '❌';
+    font-size: 0.875rem;
+}
+
+/* Message d'information */
 .info-message {
-    font-size: 0.85rem;
-    color: #555;
+    font-size: 0.875rem;
+    color: var(--text-light);
     text-align: center;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: rgba(59, 130, 246, 0.05);
+    border-radius: var(--radius);
+    border: 1px solid rgba(59, 130, 246, 0.1);
 }
 
 /* Bouton */
 .form-card button {
     width: 100%;
-    padding: 0.75rem;
-    background: #007bff;
+    padding: 1rem;
+    background: linear-gradient(135deg, var(--primary), #8b5cf6);
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: var(--radius);
     font-size: 1rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: var(--transition);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 1rem;
 }
 
 .form-card button:hover:not(:disabled) {
-    background: #0056b3;
+    background: linear-gradient(135deg, var(--primary-hover), #7c3aed);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
 }
 
 .form-card button:disabled {
-    background: #7aa7e0;
+    background: var(--text-muted);
     cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Loading spinner */
+.form-card button.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 16px;
+    height: 16px;
+    border: 2px solid transparent;
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
 /* Responsive */
+@media (max-width: 768px) {
+    .containerInscription {
+        padding: 1.5rem;
+    }
+
+    .form-card {
+        padding: 2rem;
+    }
+
+    .form-card h2 {
+        font-size: 1.625rem;
+    }
+}
+
 @media (max-width: 480px) {
+    .containerInscription {
+        padding: 1rem;
+    }
+
     .form-card {
         padding: 1.5rem;
+        margin: 1rem 0;
     }
 
     .form-card h2 {
         font-size: 1.5rem;
+        margin-bottom: 1.5rem;
     }
 
     .form-card input {
+        font-size: 16px; /* Évite le zoom sur iOS */
+        padding: 0.75rem;
+    }
+
+    .form-card button {
+        padding: 0.875rem;
         font-size: 0.95rem;
+    }
+}
+
+/* Accessibilité */
+.form-card input:focus,
+.form-card button:focus {
+    outline: 2px solid var(--border-focus);
+    outline-offset: 2px;
+}
+
+/* Réduction des animations */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
     }
 }

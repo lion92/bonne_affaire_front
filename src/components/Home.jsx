@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDealStore } from '../store/useDealStore.js';
-
+import '../css/home.css'
 export default function Home() {
     const { deals, fetchDeals, deleteDeal } = useDealStore();
 
