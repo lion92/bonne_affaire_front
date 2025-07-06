@@ -67,7 +67,7 @@ const Inscription = () => {
 
     return (
         <div className="containerInscription">
-            <Layout/>
+            <Layout></Layout>
             <div className="form-card">
                 <h2>Inscription</h2>
 

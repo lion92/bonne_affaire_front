@@ -11,9 +11,7 @@ export default function Layout() {
                     <li><Link to="/inscription">📝 Inscription</Link></li>
                 </ul>
             </nav>
-            <main className="container">
                 <Outlet />
-            </main>
         </>
     );
 }

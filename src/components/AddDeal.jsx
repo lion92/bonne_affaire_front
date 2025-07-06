@@ -1,7 +1,8 @@
 // src/components/AddDeal.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDealStore } from "../store/useDealStore.js";
+import { useCategoryStore } from "../store/useCategoryStore.js";
 import "../css/addDeal.css";
 import Layout from "./Layout.jsx";
 
@@ -11,8 +12,19 @@ export default function AddDeal() {
     const [dealUrl, setDealUrl] = useState("");
     const [imageUrl, setImageUrl] = useState("");
     const [price, setPrice] = useState("");
-    const createDeal = useDealStore((s) => s.createDeal);
+    const [categoryId, setCategoryId] = useState("");
     const navigate = useNavigate();
+
+    const createDeal = useDealStore((s) => s.createDeal);
+    const { categories, fetchCategories, loading, error } = useCategoryStore();
+
+    // Charger les catégories au montage si vide
+    useEffect(() => {
+        const token = localStorage.getItem("jwt");
+        if (token && categories.length === 0) {
+            fetchCategories(token);
+        }
+    }, [categories.length, fetchCategories]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -30,6 +42,10 @@ export default function AddDeal() {
             alert("Le prix doit être un nombre.");
             return;
         }
+        if (!categoryId) {
+            alert("Veuillez sélectionner une catégorie.");
+            return;
+        }
 
         const newDeal = {
             title: title.trim(),
@@ -38,10 +54,17 @@ export default function AddDeal() {
             imageUrl: imageUrl.trim(),
             price: parseFloat(price),
             isActive: true,
+            categoryId: parseInt(categoryId),
         };
 
+        const token = localStorage.getItem("jwt");
+        if (!token) {
+            alert("Vous devez être connecté pour ajouter une affaire.");
+            return;
+        }
+
         try {
-            await createDeal(newDeal);
+            await createDeal(newDeal, token);
             alert("Affaire ajoutée avec succès !");
             // Nettoyage du formulaire
             setTitle("");
@@ -49,6 +72,7 @@ export default function AddDeal() {
             setDealUrl("");
             setImageUrl("");
             setPrice("");
+            setCategoryId("");
             navigate("/home");
         } catch (error) {
             console.error(error);
@@ -58,7 +82,7 @@ export default function AddDeal() {
 
     return (
         <main className="container">
-            <Layout/>
+
             <h1>Ajouter une bonne affaire</h1>
             <form onSubmit={handleSubmit} className="form">
                 <input
@@ -95,6 +119,26 @@ export default function AddDeal() {
                     onChange={(e) => setPrice(e.target.value)}
                     required
                 />
+
+                {loading ? (
+                    <p>Chargement des catégories...</p>
+                ) : error ? (
+                    <p className="error">{error}</p>
+                ) : (
+                    <select
+                        value={categoryId}
+                        onChange={(e) => setCategoryId(e.target.value)}
+                        required
+                    >
+                        <option value="">-- Choisir une catégorie --</option>
+                        {categories.map((cat) => (
+                            <option key={cat.id} value={cat.id}>
+                                {cat.name}
+                            </option>
+                        ))}
+                    </select>
+                )}
+
                 <button type="submit" className="button">
                     Ajouter
                 </button>
