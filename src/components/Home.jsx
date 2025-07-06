@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom';
 import { useDealStore } from '../store/store.js';
+import Layout from "./Layout.jsx";
 
 export default function Home() {
     const { deals } = useDealStore();
 
     return (
         <main className="home-container">
+            <Layout/>
             <section className="hero">
                 <h1>🔥 Bonnes affaires à partager</h1>
                 <p>Découvre et propose les meilleures offres du moment !</p>

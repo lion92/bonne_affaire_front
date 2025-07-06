@@ -1,50 +1,64 @@
 // src/components/AddDeal.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDealStore } from "../store/store.js";
-import '../css/addDeal.css'
+import { useDealStore } from "../store/useDealStore.js";
+import "../css/addDeal.css";
+import Layout from "./Layout.jsx";
+
 export default function AddDeal() {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const [link, setLink] = useState("");
-    const [image, setImage] = useState("");
-    const addDeal = useDealStore((s) => s.addDeal);
+    const [dealUrl, setDealUrl] = useState("");
+    const [imageUrl, setImageUrl] = useState("");
+    const [price, setPrice] = useState("");
+    const createDeal = useDealStore((s) => s.createDeal);
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         // Validation basique
-        if (!link.startsWith("http")) {
+        if (!dealUrl.startsWith("http")) {
             alert("Le lien doit commencer par http ou https.");
             return;
         }
-        if (!image.startsWith("http")) {
+        if (!imageUrl.startsWith("http")) {
             alert("L'URL de l'image doit commencer par http ou https.");
             return;
         }
+        if (price && isNaN(parseFloat(price))) {
+            alert("Le prix doit être un nombre.");
+            return;
+        }
 
-        // Création d'un id unique
         const newDeal = {
-            id: Date.now().toString(),
             title: title.trim(),
             description: description.trim(),
-            link: link.trim(),
-            image: image.trim(),
+            dealUrl: dealUrl.trim(),
+            imageUrl: imageUrl.trim(),
+            price: parseFloat(price),
+            isActive: true,
         };
 
-        addDeal(newDeal);
-        alert("Affaire ajoutée avec succès !");
-        // Nettoyage du formulaire
-        setTitle("");
-        setDescription("");
-        setLink("");
-        setImage("");
-        navigate("/home");
+        try {
+            await createDeal(newDeal);
+            alert("Affaire ajoutée avec succès !");
+            // Nettoyage du formulaire
+            setTitle("");
+            setDescription("");
+            setDealUrl("");
+            setImageUrl("");
+            setPrice("");
+            navigate("/home");
+        } catch (error) {
+            console.error(error);
+            alert("Une erreur est survenue lors de l'ajout.");
+        }
     };
 
     return (
         <main className="container">
+            <Layout/>
             <h1>Ajouter une bonne affaire</h1>
             <form onSubmit={handleSubmit} className="form">
                 <input
@@ -63,15 +77,22 @@ export default function AddDeal() {
                 <input
                     type="url"
                     placeholder="Lien vers l'offre (https://...)"
-                    value={link}
-                    onChange={(e) => setLink(e.target.value)}
+                    value={dealUrl}
+                    onChange={(e) => setDealUrl(e.target.value)}
                     required
                 />
                 <input
                     type="url"
                     placeholder="URL de l'image (https://...)"
-                    value={image}
-                    onChange={(e) => setImage(e.target.value)}
+                    value={imageUrl}
+                    onChange={(e) => setImageUrl(e.target.value)}
+                    required
+                />
+                <input
+                    type="number"
+                    placeholder="Prix (€)"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
                     required
                 />
                 <button type="submit" className="button">

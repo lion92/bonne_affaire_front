@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import lien from '../components/lien.js';
 import '../css/connexion.css';
 import Home from "./Home.jsx";
+import Layout from "./Layout.jsx";
 
 const Connection = () => {
     const [messageLog, setMessageLog] = useState("");
@@ -202,6 +203,7 @@ const Connection = () => {
 
     return (
         <div>
+            <Layout/>
             {notification.show && (
                 <div className={`notification ${notification.type}`}>
                     <div className="notification-content">

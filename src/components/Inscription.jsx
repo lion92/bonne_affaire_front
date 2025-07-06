@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import lien from './lien';
 import '../css/connexion.css'
+import Layout from "./Layout.jsx";
 const Inscription = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -66,6 +67,7 @@ const Inscription = () => {
 
     return (
         <div className="containerInscription">
+            <Layout/>
             <div className="form-card">
                 <h2>Inscription</h2>
 
