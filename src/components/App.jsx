@@ -1,46 +1,28 @@
-import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { useDealStore } from '../store/useDealStore.js';
-import '../css/index.css';
-import Layout from "./Layout.jsx";
+import { Link, Outlet, useNavigate } from 'react-router-dom';
+import '../css/layout.css';
 
-export default function App() {
-    const { deals, fetchDeals, loading, error } = useDealStore();
+export default function Layout() {
+    const navigate = useNavigate();
 
-    // Charger les deals au premier montage
-    useEffect(() => {
-        if (deals.length === 0) {
-            const token = localStorage.getItem("jwt");
-            if (token) {
-                fetchDeals(token);
-            }
-        }
-    }, [deals.length, fetchDeals]);
+    const handleLogout = () => {
+        localStorage.removeItem('jwt');
+        navigate('/');
+    };
 
     return (
-        <main className="container">
-            <Layout/>
-            <header>
-                <h1>🔥 Bonnes affaires</h1>
-                <Link to="/add" className="button">+ Proposer une affaire</Link>
-            </header>
-
-            {loading && <p>Chargement...</p>}
-            {error && <p className="error">{error}</p>}
-            {!loading && !error && deals.length === 0 && (
-                <p>Aucune affaire disponible pour le moment.</p>
-            )}
-
-            <div className="grid">
-                {deals.map((deal) => (
-                    <Link key={deal.id} to={`/deal/${deal.id}`} className="card">
-                        {deal.imageUrl && (
-                            <img src={deal.imageUrl} alt={`Image de ${deal.title}`} />
-                        )}
-                        <h2>{deal.title}</h2>
-                    </Link>
-                ))}
-            </div>
-        </main>
+        <>
+            <nav className="menu">
+                <ul>
+                    <li><Link to="/home">🏠 Accueil</Link></li>
+                    <li><Link to="/add">➕ Ajouter une affaire</Link></li>
+                    <li><Link to="/">🔑 Connexion</Link></li>
+                    <li><Link to="/inscription">📝 Inscription</Link></li>
+                </ul>
+                <button onClick={handleLogout} className="logout-button">
+                    🚪 Déconnexion
+                </button>
+            </nav>
+            <Outlet />
+        </>
     );
 }

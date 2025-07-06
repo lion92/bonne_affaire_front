@@ -1,7 +1,8 @@
-import React, { useCallback, useState } from 'react';
+import React, {useCallback, useState} from 'react';
 import lien from './lien';
 import '../css/inscription.css'
 import Layout from "./Layout.jsx";
+
 const Inscription = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -23,8 +24,14 @@ const Inscription = () => {
 
     const validateForm = () => {
         let valid = true;
-        if (!nom) { setNomError("Le nom est obligatoire"); valid = false; } else setNomError("");
-        if (!prenom) { setPrenomError("Le prénom est obligatoire"); valid = false; } else setPrenomError("");
+        if (!nom) {
+            setNomError("Le nom est obligatoire");
+            valid = false;
+        } else setNomError("");
+        if (!prenom) {
+            setPrenomError("Le prénom est obligatoire");
+            valid = false;
+        } else setPrenomError("");
         if (!validateEmail(email)) valid = false;
         if (password.length < 3) {
             setPasswordError("Le mot de passe doit comporter au moins 3 caractères");
@@ -44,15 +51,18 @@ const Inscription = () => {
         try {
             const response = await fetch(`${lien.url}connection/signup`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ nom, prenom, email, password })
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({nom, prenom, email, password})
             });
 
             const data = await response.json().catch(() => ({}));
             if (response.ok) {
                 setIsSuccess(true);
                 setInscriptionMessage("Inscription réussie ! Vérifiez votre email pour activer votre compte.");
-                setNom(""); setPrenom(""); setEmail(""); setPassword("");
+                setNom("");
+                setPrenom("");
+                setEmail("");
+                setPassword("");
             } else {
                 setIsSuccess(false);
                 setInscriptionMessage(data.message || "Une erreur est survenue. Veuillez réessayer.");
@@ -66,40 +76,80 @@ const Inscription = () => {
     }, [nom, prenom, email, password]);
 
     return (
-        <div className="containerInscription">
+        <>
             <Layout></Layout>
-            <div className="form-card">
-                <h2>Inscription</h2>
+            <div className="containerInscription">
+                <div className="form-card">
+                    <h2>Inscription</h2>
 
-                <input type="text" placeholder="Nom" value={nom}
-                       onChange={e => setNom(e.target.value)}/>
-                <p className="error">{nomError}</p>
+                    <div className="input-group">
+                        <input
+                            type="text"
+                            placeholder="Nom"
+                            value={nom}
+                            onChange={e => setNom(e.target.value)}
+                            className={nomError ? 'error' : ''}
+                        />
+                        <label>Nom</label>
+                        {nomError && <p className="error">{nomError}</p>}
+                    </div>
 
-                <input type="text" placeholder="Prénom" value={prenom}
-                       onChange={e => setPrenom(e.target.value)}/>
-                <p className="error">{prenomError}</p>
+                    <div className="input-group">
+                        <input
+                            type="text"
+                            placeholder="Prénom"
+                            value={prenom}
+                            onChange={e => setPrenom(e.target.value)}
+                            className={prenomError ? 'error' : ''}
+                        />
+                        <label>Prénom</label>
+                        {prenomError && <p className="error">{prenomError}</p>}
+                    </div>
 
-                <input type="text" placeholder="Email" value={email}
-                       onChange={e => setEmail(e.target.value)}/>
-                <p className="error">{emailError}</p>
+                    <div className="input-group">
+                        <input
+                            type="email"
+                            placeholder="Email"
+                            value={email}
+                            onChange={e => setEmail(e.target.value)}
+                            className={emailError ? 'error' : ''}
+                        />
+                        <label>Email</label>
+                        {emailError && <p className="error">{emailError}</p>}
+                    </div>
 
-                <input type="password" placeholder="Mot de passe" value={password}
-                       onChange={e => setPassword(e.target.value)}/>
-                <p className="error">{passwordError}</p>
+                    <div className="input-group">
+                        <input
+                            type="password"
+                            placeholder="Mot de passe"
+                            value={password}
+                            onChange={e => setPassword(e.target.value)}
+                            className={passwordError ? 'error' : ''}
+                        />
+                        <label>Mot de passe</label>
+                        {passwordError && <p className="error">{passwordError}</p>}
+                    </div>
 
-                <p className={isSuccess ? "success-message" : "error-message"}>
-                    {inscriptionMessage}
-                </p>
+                    {inscriptionMessage && (
+                        <p className={isSuccess ? "success-message" : "error-message"}>
+                            {inscriptionMessage}
+                        </p>
+                    )}
 
-                <button onClick={fetchInscription} disabled={isLoading}>
-                    {isLoading ? "Inscription en cours..." : "S'inscrire"}
-                </button>
+                    <button
+                        onClick={fetchInscription}
+                        disabled={isLoading}
+                        className={isLoading ? 'loading' : ''}
+                    >
+                        {isLoading ? "Inscription en cours..." : "S'inscrire"}
+                    </button>
 
-                <p className="info-message">
-                    Vous recevrez un email pour activer votre compte.
-                </p>
+                    <p className="info-message">
+                        Vous recevrez un email pour activer votre compte.
+                    </p>
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 
