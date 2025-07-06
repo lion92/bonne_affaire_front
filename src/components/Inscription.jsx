@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import lien from './lien';
-import '../css/connexion.css'
+import '../css/inscription.css'
 import Layout from "./Layout.jsx";
 const Inscription = () => {
     const [email, setEmail] = useState("");

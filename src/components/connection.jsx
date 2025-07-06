@@ -88,11 +88,12 @@ const Connection = () => {
 
             if (!isNaN(data?.id)) {
                 localStorage.setItem("utilisateur", data.id);
-                setMessageLog("Code Bon");
+                setMessageLog("Connexion réussie");
                 setProbleme("connecte");
                 showNotification("success", "Connexion réussie");
             } else {
                 setMessageLog("Déconnecté - Token invalide");
+                setProbleme("non connecte");
                 showNotification("warning", "Session expirée - Veuillez vous reconnecter");
             }
         } catch {
@@ -137,7 +138,10 @@ const Connection = () => {
 
             if (data.message && !data.success) {
                 setMessageLog(data.message);
-                showNotification(data.message.includes("email") ? "warning" : "error", data.message);
+                showNotification(
+                    data.message.includes("email") ? "warning" : "error",
+                    data.message
+                );
                 return;
             }
 
@@ -182,7 +186,6 @@ const Connection = () => {
                 return;
             }
 
-            // On ne dépend plus de data.message
             setForgotMessage("Vérifie tes mails");
             showNotification("info", "Vérifie tes mails");
 
@@ -199,28 +202,40 @@ const Connection = () => {
         setEmail("");
         setPassword("");
         showNotification("info", "Déconnecté");
+        // Optionnel : recharger pour reset tout
+        window.location.reload();
     };
 
     return (
         <div>
-            <Layout/>
+            <Layout />
             {notification.show && (
                 <div className={`notification ${notification.type}`}>
                     <div className="notification-content">
                         <span>{notification.message}</span>
-                        <button onClick={() => setNotification(prev => ({ ...prev, show: false }))}>&times;</button>
+                        <button
+                            onClick={() => setNotification(prev => ({ ...prev, show: false }))}
+                        >
+                            &times;
+                        </button>
                     </div>
                 </div>
             )}
 
             {probleme === "connecte" ? (
                 <div>
-                    <button onClick={handleLogout} className="logout-button">Déconnexion</button>
+                    <button onClick={handleLogout} className="logout-button">
+                        Déconnexion
+                    </button>
                     <Home />
                 </div>
             ) : (
                 <div className="container2">
-                    <div className="status-indicator">{messageLog || probleme}</div>
+                    <h2>Connexion</h2>
+                    <p>Veuillez saisir vos identifiants pour vous connecter.</p>
+                    <div className="status-indicator">
+                        {messageLog || "Non connecté"}
+                    </div>
 
                     <input
                         id="email"
@@ -244,7 +259,10 @@ const Connection = () => {
 
                     <button onClick={fetchConnection} id="btnLogin">LOGIN</button>
 
-                    <button onClick={() => setShowForgotForm(!showForgotForm)} className="forgot-button">
+                    <button
+                        onClick={() => setShowForgotForm(!showForgotForm)}
+                        className="forgot-button"
+                    >
                         {showForgotForm ? "Annuler" : "Mot de passe oublié ?"}
                     </button>
 

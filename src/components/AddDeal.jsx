@@ -5,6 +5,7 @@ import { useDealStore } from "../store/useDealStore.js";
 import { useCategoryStore } from "../store/useCategoryStore.js";
 import "../css/addDeal.css";
 import Layout from "./Layout.jsx";
+import AddCategory from "./AddCategory.jsx";
 
 export default function AddDeal() {
     const [title, setTitle] = useState("");
@@ -82,7 +83,7 @@ export default function AddDeal() {
 
     return (
         <main className="container">
-
+            <AddCategory></AddCategory>
             <h1>Ajouter une bonne affaire</h1>
             <form onSubmit={handleSubmit} className="form">
                 <input
