@@ -1,86 +1,86 @@
-:root {
-    --color-primary: #0077cc;
-    --color-primary-hover: #005fa3;
-    --color-secondary: #555;
-    --color-secondary-hover: #333;
-    --color-background: #f9fafb;
-    --color-text: #222;
-    --color-card: #fff;
-    --color-border: #e0e0e0;
-    --radius: 8px;
-}
-
-body {
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: var(--color-background);
-    color: var(--color-text);
-}
-
 main.container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 1rem;
-}
-
-h1 {
-    font-size: 2rem;
-    margin: 1rem 0;
-    text-align: center;
-}
-
-p {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    text-align: center;
-    margin-bottom: 1.5rem;
+    max-width: 720px;
+    margin: 2rem auto;
+    padding: 2rem;
+    font-family: "Inter", "Segoe UI", sans-serif;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
 }
 
 .detail-img {
     width: 100%;
-    max-height: 400px;
+    height: auto;
+    border-radius: 8px;
     object-fit: cover;
-    border-radius: var(--radius);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
 }
 
-/* Boutons */
+h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #222;
+}
+
+p {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+}
+
+.price {
+    font-size: 1.2rem;
+    color: #0a7cff;
+    font-weight: 600;
+}
+
+.old-price {
+    font-size: 1rem;
+    color: #888;
+}
+
+.button-group {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
 .button {
     display: inline-block;
-    background: var(--color-primary);
-    color: white;
     padding: 0.75rem 1.25rem;
-    border: none;
-    border-radius: var(--radius);
-    font-size: 1rem;
-    cursor: pointer;
+    background: #0a7cff;
+    color: white;
     text-decoration: none;
-    text-align: center;
-    margin: 0.25rem;
-    transition: background 0.2s, transform 0.1s;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: background 0.2s ease;
 }
 
 .button:hover {
-    background: var(--color-primary-hover);
-    transform: translateY(-2px);
+    background: #005bbf;
 }
 
 .button.secondary {
-    background: var(--color-secondary);
+    background: #f0f0f0;
+    color: #333;
 }
 
 .button.secondary:hover {
-    background: var(--color-secondary-hover);
+    background: #ddd;
 }
 
-/* Responsive */
 @media (max-width: 600px) {
+    main.container {
+        padding: 1rem;
+    }
     h1 {
         font-size: 1.5rem;
     }
-    .button {
-        width: 100%;
-        margin: 0.5rem 0;
+    .button-group {
+        flex-direction: column;
     }
 }
