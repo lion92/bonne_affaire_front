@@ -2,8 +2,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCategoryStore } from "../store/useCategoryStore.js";
-import Layout from "./Layout.jsx";
-
+import '../css/category.css'
 export default function AddCategory() {
     const [name, setName] = useState("");
     const createCategory = useCategoryStore((s) => s.createCategory);
@@ -27,7 +26,6 @@ export default function AddCategory() {
             await createCategory(name.trim(), token);
             alert("Catégorie ajoutée avec succès !");
             setName("");
-            navigate("/home"); // tu peux rediriger ailleurs si besoin
         } catch (error) {
             console.error(error);
             alert("Une erreur est survenue lors de l'ajout.");

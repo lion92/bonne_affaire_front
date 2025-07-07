@@ -388,3 +388,319 @@ body {
 html {
     scroll-behavior: smooth;
 }
+
+/* CSS spécifique pour les filtres - Style mauve clair */
+
+/* Variables pour les filtres */
+:root {
+    --primary-purple: #8b5cf6;
+    --light-purple: #a78bfa;
+    --lighter-purple: #c4b5fd;
+    --pale-purple: #e9d5ff;
+    --accent-purple: #9333ea;
+    --text-main: #374151;
+    --text-secondary: #6b7280;
+    --white: #ffffff;
+    --light-gray: #f9fafb;
+    --lighter-gray: #f3f4f6;
+    --border-light: #e5e7eb;
+    --danger-red: #ef4444;
+    --shadow-medium: 0 4px 6px -1px rgba(139, 92, 246, 0.1), 0 2px 4px -1px rgba(139, 92, 246, 0.06);
+}
+
+/* Section des filtres */
+.filters-section {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: var(--shadow-medium);
+    border: 1px solid var(--lighter-purple);
+    margin-bottom: 2rem;
+}
+
+/* En-tête des filtres */
+.filters-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.filters-header h3 {
+    color: var(--accent-purple);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Bouton effacer les filtres */
+.clear-filters {
+    background: var(--lighter-gray) !important;
+    color: var(--text-secondary) !important;
+    border: 1px solid var(--border-light) !important;
+    font-size: 0.9rem !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.clear-filters:hover {
+    background: var(--danger-red) !important;
+    color: var(--white) !important;
+    border-color: var(--danger-red) !important;
+    transform: translateY(-1px);
+}
+
+/* Grille des filtres */
+.filters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Groupe de filtre */
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.filter-group label {
+    font-weight: 600;
+    color: var(--accent-purple);
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+}
+
+/* Champs de saisie des filtres */
+.filter-input,
+.filter-select {
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--border-light);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    transition: all 0.3s ease;
+    background: var(--light-gray);
+    color: var(--text-main);
+    width: 100%;
+}
+
+.filter-input:focus,
+.filter-select:focus {
+    outline: none;
+    border-color: var(--primary-purple);
+    background: var(--white);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+    transform: translateY(-1px);
+}
+
+.filter-input:hover,
+.filter-select:hover {
+    border-color: var(--light-purple);
+    background: var(--white);
+}
+
+/* Placeholder du champ de recherche */
+.filter-input::placeholder {
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+/* Select spécifique */
+.filter-select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.75rem center;
+    background-repeat: no-repeat;
+    background-size: 1.25em 1.25em;
+    padding-right: 2.5rem;
+}
+
+.filter-select:focus {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%238b5cf6' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+}
+
+/* En-tête des résultats */
+.deals-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.deals-header h2 {
+    color: var(--accent-purple);
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+/* Info sur les résultats */
+.results-info {
+    background: var(--pale-purple);
+    color: var(--accent-purple);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+/* Message aucun résultat */
+.no-results {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: var(--light-gray);
+    border-radius: 16px;
+    border: 2px dashed var(--border-light);
+    margin-top: 2rem;
+}
+
+.no-results-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.no-results p {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+/* Animation pour les filtres */
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.filters-section {
+    animation: slideInDown 0.4s ease-out;
+}
+
+/* Responsive pour les filtres */
+@media (max-width: 768px) {
+    .filters-section {
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .filters-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .filters-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+
+    .filters-header h3 {
+        font-size: 1.25rem;
+        text-align: center;
+    }
+
+    .clear-filters {
+        align-self: center;
+    }
+
+    .deals-header {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+
+    .deals-header h2 {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .filters-section {
+        padding: 1rem;
+        border-radius: 12px;
+    }
+
+    .filter-input,
+    .filter-select {
+        padding: 0.625rem 0.875rem;
+        font-size: 0.875rem;
+    }
+
+    .filter-group label {
+        font-size: 0.8rem;
+    }
+
+    .filters-header h3 {
+        font-size: 1.1rem;
+    }
+
+    .clear-filters {
+        font-size: 0.8rem !important;
+        padding: 0.375rem 0.75rem !important;
+    }
+}
+
+/* États d'accessibilité pour les filtres */
+.filter-input:focus,
+.filter-select:focus,
+.clear-filters:focus {
+    outline: 2px solid var(--primary-purple);
+    outline-offset: 2px;
+}
+
+/* Indicateur visuel pour les filtres actifs */
+.filter-group:has(.filter-input:not([value=""])) label,
+.filter-group:has(.filter-select:not([value=""])) label {
+    color: var(--primary-purple);
+    font-weight: 700;
+}
+
+.filter-input:not(:placeholder-shown),
+.filter-select:not([value=""]) {
+    border-color: var(--primary-purple);
+    border-width: 2px;
+    background: rgba(139, 92, 246, 0.05);
+}
+
+/* Amélioration visuelle pour les selects avec options sélectionnées */
+.filter-select:not([value=""]) {
+    background-color: rgba(139, 92, 246, 0.05);
+    font-weight: 500;
+}
+
+/* Effet de hover amélioré */
+.filter-group:hover label {
+    color: var(--primary-purple);
+    transition: color 0.2s ease;
+}
+
+/* Style pour les icônes dans les labels */
+.filter-group label::before {
+    margin-right: 0.25rem;
+}
+
+/* Séparateur visuel optionnel */
+.filters-section::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--lighter-purple), transparent);
+    margin-top: 1rem;
+}

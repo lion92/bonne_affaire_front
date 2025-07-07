@@ -17,6 +17,7 @@ export default function Layout() {
                     <li><Link to="/add">➕ Ajouter une affaire</Link></li>
                     <li><Link to="/">🔑 Connexion</Link></li>
                     <li><Link to="/inscription">📝 Inscription</Link></li>
+                    <li><Link to="/category">📝 Category</Link></li>
                 </ul>
                 <button onClick={handleLogout} className="logout-button">
                     🚪 Déconnexion

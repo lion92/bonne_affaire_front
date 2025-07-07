@@ -1,8 +1,8 @@
 // src/components/AddDeal.jsx
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useDealStore } from "../store/useDealStore.js";
-import { useCategoryStore } from "../store/useCategoryStore.js";
+import {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {useDealStore} from "../store/useDealStore.js";
+import {useCategoryStore} from "../store/useCategoryStore.js";
 import "../css/addDeal.css";
 import AddCategory from "./AddCategory.jsx";
 
@@ -16,7 +16,7 @@ export default function AddDeal() {
 
     const navigate = useNavigate();
     const createDeal = useDealStore((s) => s.createDeal);
-    const { categories, fetchCategories, loading, error } = useCategoryStore();
+    const {categories, fetchCategories, loading, error} = useCategoryStore();
 
     // Charger les catégories au montage si vide
     useEffect(() => {
@@ -81,68 +81,72 @@ export default function AddDeal() {
     };
 
     return (
-        <main className="container">
-            <AddCategory />
-            <h1>Ajouter une bonne affaire</h1>
-            <form onSubmit={handleSubmit} className="form">
-                <input
-                    type="text"
-                    placeholder="Titre"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    required
-                />
-                <textarea
-                    placeholder="Description"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    required
-                />
-                <input
-                    type="url"
-                    placeholder="Lien vers l'offre (https://...)"
-                    value={dealUrl}
-                    onChange={(e) => setDealUrl(e.target.value)}
-                    required
-                />
-                <input
-                    type="url"
-                    placeholder="URL de l'image (https://...)"
-                    value={imageUrl}
-                    onChange={(e) => setImageUrl(e.target.value)}
-                    required
-                />
-                <input
-                    type="number"
-                    placeholder="Prix (€)"
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                    required
-                />
+        <div>
+            <main className="container">
 
-                {loading ? (
-                    <p>Chargement des catégories...</p>
-                ) : error ? (
-                    <p className="error">{error}</p>
-                ) : (
-                    <select
-                        value={categoryId}
-                        onChange={(e) => setCategoryId(e.target.value)}
-                        required
-                    >
-                        <option value="">-- Choisir une catégorie --</option>
-                        {categories.map((cat) => (
-                            <option key={cat.id} value={cat.id}>
-                                {cat.name}
-                            </option>
-                        ))}
-                    </select>
-                )}
+                <div>
+                    <h1>Ajouter une bonne affaire</h1>
+                    <form onSubmit={handleSubmit} className="form">
+                        <input
+                            type="text"
+                            placeholder="Titre"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            required
+                        />
+                        <textarea
+                            placeholder="Description"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            required
+                        />
+                        <input
+                            type="url"
+                            placeholder="Lien vers l'offre (https://...)"
+                            value={dealUrl}
+                            onChange={(e) => setDealUrl(e.target.value)}
+                            required
+                        />
+                        <input
+                            type="url"
+                            placeholder="URL de l'image (https://...)"
+                            value={imageUrl}
+                            onChange={(e) => setImageUrl(e.target.value)}
+                            required
+                        />
+                        <input
+                            type="number"
+                            placeholder="Prix (€)"
+                            value={price}
+                            onChange={(e) => setPrice(e.target.value)}
+                            required
+                        />
 
-                <button type="submit" className="button">
-                    Ajouter
-                </button>
-            </form>
-        </main>
+                        {loading ? (
+                            <p>Chargement des catégories...</p>
+                        ) : error ? (
+                            <p className="error">{error}</p>
+                        ) : (
+                            <select
+                                value={categoryId}
+                                onChange={(e) => setCategoryId(e.target.value)}
+                                required
+                            >
+                                <option value="">-- Choisir une catégorie --</option>
+                                {categories.map((cat) => (
+                                    <option key={cat.id} value={cat.id}>
+                                        {cat.name}
+                                    </option>
+                                ))}
+                            </select>
+                        )}
+
+                        <button type="submit" className="button">
+                            Ajouter
+                        </button>
+                    </form>
+                </div>
+            </main>
+        </div>
     );
 }

@@ -10,6 +10,7 @@ import Home from "../components/Home.jsx";
 import Connection from "../components/Connection.jsx";
 import Inscription from "../components/Inscription.jsx";
 import Layout from "../components/Layout.jsx";
+import AddCategory from "../components/AddCategory.jsx";
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
@@ -24,6 +25,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                     <Route path="/home" element={<Home />} />
                     <Route path="/add" element={<AddDeal />} />
                     <Route path="/deal/:id" element={<DealDetail />} />
+                    <Route path="category" element={<AddCategory />} />
                 </Route>
             </Routes>
         </BrowserRouter>
