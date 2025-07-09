@@ -1,27 +1,37 @@
 import { create } from 'zustand';
 import axios from 'axios';
 
+const API_URL = 'http://localhost:3004/categories';
+
+// Fonction utilitaire pour récupérer le token
+const getAuthHeader = () => {
+    const token = localStorage.getItem('jwt'); // ou via un autre store
+    return {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    };
+};
+
 export const useCategoryStore = create((set) => ({
     categories: [],
     loading: false,
     error: null,
 
-    // Récupérer toutes les catégories
     fetchCategories: async () => {
         set({ loading: true, error: null });
         try {
-            const res = await axios.get('http://localhost:3004/categories');
+            const res = await axios.get(API_URL, getAuthHeader());
             set({ categories: res.data, loading: false });
         } catch (err) {
             set({ error: err.message, loading: false });
         }
     },
 
-    // Récupérer une catégorie par ID
     fetchCategoryById: async (id) => {
         set({ loading: true, error: null });
         try {
-            const res = await axios.get(`http://localhost:3004/categories/${id}`);
+            const res = await axios.get(`${API_URL}/${id}`, getAuthHeader());
             set((state) => ({
                 categories: [
                     ...state.categories.filter((c) => c.id !== res.data.id),
@@ -34,11 +44,10 @@ export const useCategoryStore = create((set) => ({
         }
     },
 
-    // Créer une catégorie
     createCategory: async (name) => {
         set({ loading: true, error: null });
         try {
-            const res = await axios.post('http://localhost:3004/categories', { name });
+            const res = await axios.post(API_URL, { name }, getAuthHeader());
             set((state) => ({
                 categories: [...state.categories, res.data],
                 loading: false,
@@ -48,11 +57,10 @@ export const useCategoryStore = create((set) => ({
         }
     },
 
-    // Mettre à jour une catégorie
     updateCategory: async (id, name) => {
         set({ loading: true, error: null });
         try {
-            const res = await axios.put(`http://localhost:3004/categories/${id}`, { name });
+            const res = await axios.put(`${API_URL}/${id}`, { name }, getAuthHeader());
             set((state) => ({
                 categories: state.categories.map((c) =>
                     c.id === id ? res.data : c
@@ -64,11 +72,10 @@ export const useCategoryStore = create((set) => ({
         }
     },
 
-    // Supprimer une catégorie
     deleteCategory: async (id) => {
         set({ loading: true, error: null });
         try {
-            await axios.delete(`http://localhost:3004/categories/${id}`);
+            await axios.delete(`${API_URL}/${id}`, getAuthHeader());
             set((state) => ({
                 categories: state.categories.filter((c) => c.id !== id),
                 loading: false,
