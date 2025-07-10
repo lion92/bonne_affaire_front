@@ -1,9 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import {BrowserRouter, Route, Routes} from 'react-router-dom';
 
 import '../css/index.css';
-import App from "../components/App.jsx";
 import AddDeal from "../components/AddDeal.jsx";
 import DealDetail from "../components/DealDetail.jsx";
 import Home from "../components/Home.jsx";
@@ -12,6 +11,7 @@ import Inscription from "../components/Inscription.jsx";
 import Layout from "../components/Layout.jsx";
 import AddCategory from "../components/AddCategory.jsx";
 import UserProfile from "../components/userProfile.jsx";
+import DealValidationPage from "../components/DealValidationPage.jsx";
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
@@ -28,6 +28,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                     <Route path="/deal/:id" element={<DealDetail />} />
                     <Route path="category" element={<AddCategory />} />
                     <Route path="/profile" element={<UserProfile />} />
+                    <Route path="/validation" element={<DealValidationPage />} />
                 </Route>
             </Routes>
         </BrowserRouter>

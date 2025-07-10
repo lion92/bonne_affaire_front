@@ -3,6 +3,7 @@ import lien from '../components/lien.js';
 import '../css/connexion.css';
 import Home from "./Home.jsx";
 import Layout from "./Layout.jsx";
+import { jwtDecode } from "jwt-decode"; // ✅ Import correct pour jwt-decode v4
 
 const Connection = () => {
     const [messageLog, setMessageLog] = useState("");
@@ -64,7 +65,16 @@ const Connection = () => {
         }
 
         try {
-            const response = await fetch(lien.url+"connection/user", {
+            // ✅ Vérifie si le token est expiré
+            const decoded = jwtDecode(jwt);
+            if (decoded.exp * 1000 < Date.now()) {
+                localStorage.removeItem("jwt");
+                setMessageLog("Session expirée");
+                showNotification("warning", "Session expirée - Veuillez vous reconnecter");
+                return;
+            }
+
+            const response = await fetch(lien.url + "connection/user", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ jwt })
@@ -96,7 +106,8 @@ const Connection = () => {
                 setProbleme("non connecte");
                 showNotification("warning", "Session expirée - Veuillez vous reconnecter");
             }
-        } catch {
+        } catch (err) {
+            console.error("Erreur de décodage du JWT ou connexion :", err);
             setMessageLog("Erreur de connexion au serveur");
             showNotification("error", "Erreur de connexion au serveur");
         }
@@ -114,7 +125,7 @@ const Connection = () => {
         }
 
         try {
-            const response = await fetch(lien.url+'connection/login', {
+            const response = await fetch(lien.url + 'connection/login', {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password })
@@ -202,7 +213,6 @@ const Connection = () => {
         setEmail("");
         setPassword("");
         showNotification("info", "Déconnecté");
-        // Optionnel : recharger pour reset tout
         window.location.reload();
     };
 

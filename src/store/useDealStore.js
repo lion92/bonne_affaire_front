@@ -6,6 +6,18 @@ export const useDealStore = create((set) => ({
     loading: false,
     error: null,
 
+    fetchActiveDeals: async (token) => {
+        set({ loading: true, error: null });
+        try {
+            const res = await axios.get("http://localhost:3004/deals/active", {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            set({ deals: res.data, loading: false }); // res.data doit être un tableau
+        } catch (err) {
+            set({ error: err.message, loading: false });
+        }
+    },
+
     fetchDeals: async (token) => {
         set({ loading: true, error: null });
         try {
@@ -80,4 +92,6 @@ export const useDealStore = create((set) => ({
             set({ error: err.message, loading: false });
         }
     },
+
+
 }));

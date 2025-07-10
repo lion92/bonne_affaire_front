@@ -1,47 +1,36 @@
-import {useEffect, useMemo, useState} from 'react';
-import {Link} from 'react-router-dom';
-import {useDealStore} from '../store/useDealStore.js';
-import {useCategoryStore} from '../store/useCategoryStore.js';
+import { useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useDealStore } from '../store/useDealStore.js';
+import { useCategoryStore } from '../store/useCategoryStore.js';
 import '../css/home.css';
 
 export default function Home() {
-    const { deals, fetchDeals, deleteDeal } = useDealStore();
+    const { deals, fetchActiveDeals, deleteDeal } = useDealStore();
     const { categories, fetchCategories } = useCategoryStore();
 
-    // États pour les filtres
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
-    const [statusFilter, setStatusFilter] = useState('all'); // 'all', 'active', 'inactive'
-    const [sortBy, setSortBy] = useState('newest'); // 'newest', 'oldest', 'price-low', 'price-high'
+    const [sortBy, setSortBy] = useState('newest');
 
     useEffect(() => {
-        fetchDeals();
         const token = localStorage.getItem("jwt");
-        if (token && categories.length === 0) {
-            fetchCategories(token);
+        if (token) {
+            fetchActiveDeals(token);
+            if (categories.length === 0) fetchCategories(token);
         }
-    }, [fetchDeals, fetchCategories, categories.length]);
+    }, [fetchActiveDeals, fetchCategories, categories.length]);
 
-    // Fonction de filtrage et tri des deals
     const filteredAndSortedDeals = useMemo(() => {
         let filtered = deals.filter(deal => {
-            // Filtre par recherche textuelle
             const matchesSearch = deal.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 (deal.description && deal.description.toLowerCase().includes(searchTerm.toLowerCase()));
 
-            // Filtre par catégorie
             const matchesCategory = selectedCategory === '' ||
                 (deal.category && deal.category.id.toString() === selectedCategory);
 
-            // Filtre par statut
-            const matchesStatus = statusFilter === 'all' ||
-                (statusFilter === 'active' && deal.isActive) ||
-                (statusFilter === 'inactive' && !deal.isActive);
-
-            return matchesSearch && matchesCategory && matchesStatus;
+            return matchesSearch && matchesCategory;
         });
 
-        // Tri des résultats
         switch (sortBy) {
             case 'oldest':
                 return filtered.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
@@ -49,16 +38,16 @@ export default function Home() {
                 return filtered.sort((a, b) => a.price - b.price);
             case 'price-high':
                 return filtered.sort((a, b) => b.price - a.price);
-            case 'newest':
             default:
                 return filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         }
-    }, [deals, searchTerm, selectedCategory, statusFilter, sortBy]);
+    }, [deals, searchTerm, selectedCategory, sortBy]);
 
     const handleDelete = async (id) => {
         if (window.confirm("Voulez-vous vraiment supprimer cette affaire ?")) {
             try {
-                await deleteDeal(id);
+                const token = localStorage.getItem("jwt");
+                await deleteDeal(id, token);
             } catch (error) {
                 alert("Erreur lors de la suppression");
                 console.error(error);
@@ -69,14 +58,12 @@ export default function Home() {
     const clearFilters = () => {
         setSearchTerm('');
         setSelectedCategory('');
-        setStatusFilter('all');
         setSortBy('newest');
     };
 
     const activeFiltersCount = [
         searchTerm !== '',
         selectedCategory !== '',
-        statusFilter !== 'all',
         sortBy !== 'newest'
     ].filter(Boolean).length;
 
@@ -95,17 +82,13 @@ export default function Home() {
                     <div className="filters-header">
                         <h3>Filtrer les offres</h3>
                         {activeFiltersCount > 0 && (
-                            <button
-                                onClick={clearFilters}
-                                className="button clear-filters"
-                            >
+                            <button onClick={clearFilters} className="button clear-filters">
                                 Effacer les filtres ({activeFiltersCount})
                             </button>
                         )}
                     </div>
 
                     <div className="filters-grid">
-                        {/* Recherche textuelle */}
                         <div className="filter-group">
                             <label htmlFor="search">🔍 Rechercher</label>
                             <input
@@ -118,7 +101,6 @@ export default function Home() {
                             />
                         </div>
 
-                        {/* Filtre par catégorie */}
                         <div className="filter-group">
                             <label htmlFor="category">🏷️ Catégorie</label>
                             <select
@@ -133,6 +115,21 @@ export default function Home() {
                                         {category.name}
                                     </option>
                                 ))}
+                            </select>
+                        </div>
+
+                        <div className="filter-group">
+                            <label htmlFor="sort">↕️ Trier par</label>
+                            <select
+                                id="sort"
+                                value={sortBy}
+                                onChange={(e) => setSortBy(e.target.value)}
+                                className="filter-select"
+                            >
+                                <option value="newest">Plus récents</option>
+                                <option value="oldest">Plus anciens</option>
+                                <option value="price-low">Prix croissant</option>
+                                <option value="price-high">Prix décroissant</option>
                             </select>
                         </div>
                     </div>
@@ -185,10 +182,6 @@ export default function Home() {
                                             </a>
                                         </p>
                                     )}
-                                    <p>
-                                        <strong>Statut :</strong>{" "}
-                                        {deal.isActive ? "Actif ✅" : "Inactif ❌"}
-                                    </p>
                                     <p>
                                         <strong>Créé le :</strong>{" "}
                                         {new Date(deal.createdAt).toLocaleDateString()}
