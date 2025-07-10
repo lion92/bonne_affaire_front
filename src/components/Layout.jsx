@@ -19,6 +19,7 @@ export default function Layout() {
                             <li><Link to="/home">🏠 Accueil</Link></li>
                             <li><Link to="/add">➕ Ajouter une affaire</Link></li>
                             <li><Link to="/category">➕ Ajouter une categorie</Link></li>
+                            <li><Link to="/profile"> Profile</Link></li>
                         </>
                     )}
                     {!isAuthenticated && (
