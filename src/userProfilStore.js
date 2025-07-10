@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import {create} from 'zustand';
 import axios from 'axios';
 
 const API = 'http://localhost:3004';
@@ -13,12 +13,12 @@ export const useUserProfileStore = create((set) => ({
 
     // 🔐 Récupérer le profil de l'utilisateur connecté
     fetchProfile: async (token) => {
-        set({ loading: true, error: null });
+        set({loading: true, error: null});
         try {
             const res = await axios.get(`${API}/user-profile/me`, {
-                headers: { Authorization: `Bearer ${token}` },
+                headers: {Authorization: `Bearer ${token}`},
             });
-            set({ user: res.data, loading: false });
+            set({user: res.data, loading: false});
         } catch (err) {
             set({
                 error: err.response?.data?.message || err.message,
@@ -31,9 +31,9 @@ export const useUserProfileStore = create((set) => ({
     fetchAllUsers: async (token) => {
         try {
             const res = await axios.get(`${API}/user-profile`, {
-                headers: { Authorization: `Bearer ${token}` },
+                headers: {Authorization: `Bearer ${token}`},
             });
-            set({ allUsers: res.data });
+            set({allUsers: res.data});
         } catch (err) {
             set({
                 error: err.response?.data?.message || err.message,
@@ -45,11 +45,11 @@ export const useUserProfileStore = create((set) => ({
     fetchAllRoles: async (token) => {
         try {
             const res = await axios.get(`${API}/roles`, {
-                headers: { Authorization: `Bearer ${token}` },
+                headers: {Authorization: `Bearer ${token}`},
             });
-            set({ allRoles: res.data });
+            set({allRoles: res.data});
         } catch (err) {
-            set({ error: err.response?.data?.message || err.message });
+            set({error: err.response?.data?.message || err.message});
         }
     },
 
@@ -57,22 +57,22 @@ export const useUserProfileStore = create((set) => ({
     fetchAllPermissions: async (token) => {
         try {
             const res = await axios.get(`${API}/permission`, {
-                headers: { Authorization: `Bearer ${token}` },
+                headers: {Authorization: `Bearer ${token}`},
             });
-            set({ allPermissions: res.data });
+            set({allPermissions: res.data});
         } catch (err) {
-            set({ error: err.response?.data?.message || err.message });
+            set({error: err.response?.data?.message || err.message});
         }
     },
 
     // ✏️ Mettre à jour les rôles d’un utilisateur (admin)
     updateRoles: async (userId, roleIds, token) => {
         try {
-            await axios.put(`${API}/user-profile/${userId}/roles`, { roleIds }, {
-                headers: { Authorization: `Bearer ${token}` },
+            await axios.put(`${API}/user-profile/${userId}/roles`, {roleIds}, {
+                headers: {Authorization: `Bearer ${token}`},
             });
         } catch (err) {
-            set({ error: err.response?.data?.message || err.message });
+            set({error: err.response?.data?.message || err.message});
         }
     },
 
@@ -80,18 +80,33 @@ export const useUserProfileStore = create((set) => ({
     createPermission: async (permissionName, token) => {
         try {
             // ✅ Correction : envoyer { name: ... } au lieu de { permission: ... }
-            await axios.post(`${API}/permission`, { name: permissionName }, {
-                headers: { Authorization: `Bearer ${token}` },
+            await axios.post(`${API}/permission`, {name: permissionName}, {
+                headers: {Authorization: `Bearer ${token}`},
             });
 
             // ✅ Recharge la liste après création
             const res = await axios.get(`${API}/permission`, {
-                headers: { Authorization: `Bearer ${token}` },
+                headers: {Authorization: `Bearer ${token}`},
             });
-            set({ allPermissions: res.data });
+            set({allPermissions: res.data});
         } catch (err) {
-            set({ error: err.response?.data?.message || err.message });
+            set({error: err.response?.data?.message || err.message});
         }
     },
+    assignPermissionsToRole: async (roleId, permissionIds, token) => {
+        console.log(permissionIds);
+        try {
+            await fetch(`http://localhost:3004/roles/${roleId}/permission`, {
+                method: 'POST', // ou PATCH selon ce que tu choisis
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({ permissionIds })
+            });
+        } catch (error) {
+            set({ error: "Erreur lors de l'attribution des permissions" });
+        }
+    }
 
 }));

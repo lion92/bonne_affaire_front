@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useUserProfileStore } from '../userProfilStore.js';
-import '../css/profile.css'
+import '../css/profile.css';
+
 const UserProfile = () => {
     const token = localStorage.getItem('jwt');
 
@@ -15,10 +16,12 @@ const UserProfile = () => {
         fetchAllPermissions,
         updateRoles,
         createPermission,
+        assignPermissionsToRole,
         error,
     } = useUserProfileStore();
 
     const [selectedRoles, setSelectedRoles] = useState({});
+    const [selectedPermissions, setSelectedPermissions] = useState({});
     const [newPermission, setNewPermission] = useState('');
 
     const isAdmin = () => user?.roles?.some((role) => role.name === 'admin');
@@ -38,8 +41,12 @@ const UserProfile = () => {
     }, [user]);
 
     useEffect(() => {
-        console.log('allUsers:', allUsers); // ← pour debug
-    }, [allUsers]);
+        const initialPermissions = {};
+        allRoles.forEach((role) => {
+            initialPermissions[role.id] = role.permissions.map(p => p.id);
+        });
+        setSelectedPermissions(initialPermissions);
+    }, [allRoles]);
 
     const handleUpdateRoles = async (userId) => {
         if (token && selectedRoles[userId]) {
@@ -56,11 +63,30 @@ const UserProfile = () => {
         }));
     };
 
+    const handlePermissionChange = (roleId, permissionIds) => {
+        setSelectedPermissions(prev => ({
+            ...prev,
+            [roleId]: permissionIds
+        }));
+    };
+
+    const handleAssignPermissions = async (roleId) => {
+        if (!token || !selectedPermissions[roleId]) return;
+
+        const role = allRoles.find(r => r.id === roleId);
+
+        await assignPermissionsToRole(roleId, selectedPermissions[roleId], token);
+        alert(`Permissions mises à jour pour le rôle ${role.name}`);
+        fetchAllRoles(token);
+    };
+
+
     const handleCreatePermission = async () => {
         if (newPermission.trim() && token) {
             await createPermission(newPermission, token);
             alert('Permission créée');
             setNewPermission('');
+            fetchAllPermissions(token);
         }
     };
 
@@ -125,18 +151,36 @@ const UserProfile = () => {
                     <button onClick={handleCreatePermission} style={{marginLeft: '0.5rem'}}>
                         Ajouter
                     </button>
-                    <hr/>
-                    <h3>Liste des permissions existantes</h3>
-                    <ul>
-                        {allPermissions.map((perm) => (
-                            <li key={perm.id}>🔐 {perm.name}</li>
-                        ))}
-                    </ul>
-                </>
 
+                    <hr/>
+                    <h3>Attribuer des permissions aux rôles</h3>
+                    {allRoles.map((role) => (
+                        <div key={role.id} style={{ marginBottom: '1rem' }}>
+                            <p><strong>{role.name}</strong></p>
+                            <select
+                                multiple
+                                value={selectedPermissions[role.id] || []}
+                                onChange={(e) =>
+                                    handlePermissionChange(
+                                        role.id,
+                                        Array.from(e.target.selectedOptions, (opt) => +opt.value)
+                                    )
+                                }
+                            >
+                                {allPermissions.map((perm) => (
+                                    <option key={perm.id} value={perm.id}>{perm.name}</option>
+                                ))}
+                            </select>
+                            <br/>
+                            <button onClick={() => handleAssignPermissions(role.id)} style={{ marginTop: '0.5rem' }}>
+                                Ajouter les permissions
+                            </button>
+                        </div>
+                    ))}
+                </>
             )}
 
-            {error && <p style={{color: 'red'}}>{error}</p>}
+            {error && <p style={{ color: 'red' }}>{error}</p>}
         </div>
     );
 };
