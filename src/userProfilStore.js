@@ -5,7 +5,7 @@ const API = 'http://localhost:3004';
 
 export const useUserProfileStore = create((set) => ({
     user: null,
-    allUsers: [], // ✅ c’est ici qu’on stocke la liste
+    allUsers: [],
     allRoles: [],
     allPermissions: [],
     loading: false,
@@ -33,7 +33,7 @@ export const useUserProfileStore = create((set) => ({
             const res = await axios.get(`${API}/user-profile`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-            set({ allUsers: res.data }); // ✅ correction ici
+            set({ allUsers: res.data });
         } catch (err) {
             set({
                 error: err.response?.data?.message || err.message,
@@ -56,7 +56,7 @@ export const useUserProfileStore = create((set) => ({
     // 🔁 Récupérer toutes les permissions
     fetchAllPermissions: async (token) => {
         try {
-            const res = await axios.get(`${API}/permissions`, {
+            const res = await axios.get(`${API}/permission`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             set({ allPermissions: res.data });
@@ -79,11 +79,13 @@ export const useUserProfileStore = create((set) => ({
     // ➕ Créer une nouvelle permission (admin)
     createPermission: async (permissionName, token) => {
         try {
-            await axios.post(`${API}/permissions`, { permission: permissionName }, {
+            // ✅ Correction : envoyer { name: ... } au lieu de { permission: ... }
+            await axios.post(`${API}/permission`, { name: permissionName }, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
-            const res = await axios.get(`${API}/permissions`, {
+            // ✅ Recharge la liste après création
+            const res = await axios.get(`${API}/permission`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             set({ allPermissions: res.data });
@@ -91,4 +93,5 @@ export const useUserProfileStore = create((set) => ({
             set({ error: err.response?.data?.message || err.message });
         }
     },
+
 }));

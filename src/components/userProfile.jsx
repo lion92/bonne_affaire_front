@@ -88,10 +88,10 @@ const UserProfile = () => {
 
             {isAdmin() && (
                 <>
-                    <hr />
+                    <hr/>
                     <h3>Gérer les utilisateurs</h3>
                     {allUsers?.filter(u => !u.roles?.some(r => r.name === 'admin')).map((u) => (
-                        <div key={u.id} style={{ marginBottom: '1rem', padding: '1rem', border: '1px solid #ccc' }}>
+                        <div key={u.id} style={{marginBottom: '1rem', padding: '1rem', border: '1px solid #ccc'}}>
                             <p><strong>{u.prenom} {u.nom}</strong> - {u.email}</p>
                             <select
                                 multiple
@@ -107,14 +107,14 @@ const UserProfile = () => {
                                     <option key={role.id} value={role.id}>{role.name}</option>
                                 ))}
                             </select>
-                            <br />
-                            <button onClick={() => handleUpdateRoles(u.id)} style={{ marginTop: '0.5rem' }}>
+                            <br/>
+                            <button onClick={() => handleUpdateRoles(u.id)} style={{marginTop: '0.5rem'}}>
                                 Enregistrer les rôles
                             </button>
                         </div>
                     ))}
 
-                    <hr />
+                    <hr/>
                     <h3>Créer une permission</h3>
                     <input
                         type="text"
@@ -122,13 +122,21 @@ const UserProfile = () => {
                         onChange={(e) => setNewPermission(e.target.value)}
                         placeholder="Nom de la permission"
                     />
-                    <button onClick={handleCreatePermission} style={{ marginLeft: '0.5rem' }}>
+                    <button onClick={handleCreatePermission} style={{marginLeft: '0.5rem'}}>
                         Ajouter
                     </button>
+                    <hr/>
+                    <h3>Liste des permissions existantes</h3>
+                    <ul>
+                        {allPermissions.map((perm) => (
+                            <li key={perm.id}>🔐 {perm.name}</li>
+                        ))}
+                    </ul>
                 </>
+
             )}
 
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {error && <p style={{color: 'red'}}>{error}</p>}
         </div>
     );
 };
