@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useUserProfileStore } from '../userProfilStore.js';
+import { useUserProfileStore } from '../store/userProfilStore.js';
 import '../css/profile.css';
 
 const UserProfile = () => {

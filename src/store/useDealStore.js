@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import axios from 'axios';
+import lien from "../components/lien.js";
+const BASE_URL = ''+lien?.url; // ✅ Ta variable centrale
 
 export const useDealStore = create((set) => ({
     deals: [],
@@ -9,10 +11,10 @@ export const useDealStore = create((set) => ({
     fetchActiveDeals: async (token) => {
         set({ loading: true, error: null });
         try {
-            const res = await axios.get("http://localhost:3004/deals/active", {
+            const res = await axios.get(BASE_URL+'/deals/active', {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            set({ deals: res.data, loading: false }); // res.data doit être un tableau
+            set({ deals: res.data, loading: false });
         } catch (err) {
             set({ error: err.message, loading: false });
         }
@@ -21,7 +23,7 @@ export const useDealStore = create((set) => ({
     fetchDeals: async (token) => {
         set({ loading: true, error: null });
         try {
-            const res = await axios.get('http://localhost:3004/deals', {
+            const res = await axios.get(BASE_URL+'/deals', {
                 headers: { Authorization: `Bearer ${token}` },
             });
             set({ deals: res.data, loading: false });
@@ -33,7 +35,7 @@ export const useDealStore = create((set) => ({
     fetchDealById: async (id, token) => {
         set({ loading: true, error: null });
         try {
-            const res = await axios.get(`http://localhost:3004/deals/${id}`, {
+            const res = await axios.get(BASE_URL+'/deals/${id}', {
                 headers: { Authorization: `Bearer ${token}` },
             });
             set((state) => ({
@@ -51,7 +53,7 @@ export const useDealStore = create((set) => ({
     createDeal: async (deal, token) => {
         set({ loading: true, error: null });
         try {
-            const res = await axios.post('http://localhost:3004/deals', deal, {
+            const res = await axios.post(BASE_URL+'/deals', deal, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             set((state) => ({
@@ -66,7 +68,7 @@ export const useDealStore = create((set) => ({
     updateDeal: async (id, deal, token) => {
         set({ loading: true, error: null });
         try {
-            const res = await axios.put(`http://localhost:3004/deals/${id}`, deal, {
+            const res = await axios.put(BASE_URL+'/deals/${id}', deal, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             set((state) => ({
@@ -81,7 +83,7 @@ export const useDealStore = create((set) => ({
     deleteDeal: async (id, token) => {
         set({ loading: true, error: null });
         try {
-            await axios.delete(`http://localhost:3004/deals/${id}`, {
+            await axios.delete(BASE_URL+'/deals/${id}', {
                 headers: { Authorization: `Bearer ${token}` },
             });
             set((state) => ({
@@ -92,6 +94,4 @@ export const useDealStore = create((set) => ({
             set({ error: err.message, loading: false });
         }
     },
-
-
 }));

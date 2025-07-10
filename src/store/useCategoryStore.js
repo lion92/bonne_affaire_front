@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import axios from 'axios';
-
-const API_URL = 'http://localhost:3004/categories';
+import lien from "../components/lien.js";
+const API_URL = lien.url+'/categories';
 
 // Fonction utilitaire pour récupérer le token
 const getAuthHeader = () => {

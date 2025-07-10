@@ -1,7 +1,7 @@
 import {create} from 'zustand';
 import axios from 'axios';
-
-const API = 'http://localhost:3004';
+import lien from "../components/lien.js";
+const API = lien?.url;
 
 export const useUserProfileStore = create((set) => ({
     user: null,
@@ -15,7 +15,7 @@ export const useUserProfileStore = create((set) => ({
     fetchProfile: async (token) => {
         set({loading: true, error: null});
         try {
-            const res = await axios.get(`${API}/user-profile/me`, {
+            const res = await axios.get(API+'/user-profile/me', {
                 headers: {Authorization: `Bearer ${token}`},
             });
             set({user: res.data, loading: false});
@@ -30,7 +30,7 @@ export const useUserProfileStore = create((set) => ({
     // 👥 Récupérer tous les utilisateurs (admin uniquement)
     fetchAllUsers: async (token) => {
         try {
-            const res = await axios.get(`${API}/user-profile`, {
+            const res = await axios.get(API+'/user-profile', {
                 headers: {Authorization: `Bearer ${token}`},
             });
             set({allUsers: res.data});
@@ -44,7 +44,7 @@ export const useUserProfileStore = create((set) => ({
     // 🔁 Récupérer tous les rôles
     fetchAllRoles: async (token) => {
         try {
-            const res = await axios.get(`${API}/roles`, {
+            const res = await axios.get(API+'/roles', {
                 headers: {Authorization: `Bearer ${token}`},
             });
             set({allRoles: res.data});
@@ -56,7 +56,7 @@ export const useUserProfileStore = create((set) => ({
     // 🔁 Récupérer toutes les permissions
     fetchAllPermissions: async (token) => {
         try {
-            const res = await axios.get(`${API}/permission`, {
+            const res = await axios.get(API+'/permission', {
                 headers: {Authorization: `Bearer ${token}`},
             });
             set({allPermissions: res.data});
@@ -68,7 +68,7 @@ export const useUserProfileStore = create((set) => ({
     // ✏️ Mettre à jour les rôles d’un utilisateur (admin)
     updateRoles: async (userId, roleIds, token) => {
         try {
-            await axios.put(`${API}/user-profile/${userId}/roles`, {roleIds}, {
+            await axios.put(API+'/user-profile/${userId}/roles', {roleIds}, {
                 headers: {Authorization: `Bearer ${token}`},
             });
         } catch (err) {
@@ -80,12 +80,12 @@ export const useUserProfileStore = create((set) => ({
     createPermission: async (permissionName, token) => {
         try {
             // ✅ Correction : envoyer { name: ... } au lieu de { permission: ... }
-            await axios.post(`${API}/permission`, {name: permissionName}, {
+            await axios.post(API+'/permission', {name: permissionName}, {
                 headers: {Authorization: `Bearer ${token}`},
             });
 
             // ✅ Recharge la liste après création
-            const res = await axios.get(`${API}/permission`, {
+            const res = await axios.get(API+'/permission', {
                 headers: {Authorization: `Bearer ${token}`},
             });
             set({allPermissions: res.data});
@@ -96,7 +96,7 @@ export const useUserProfileStore = create((set) => ({
     assignPermissionsToRole: async (roleId, permissionIds, token) => {
         console.log(permissionIds);
         try {
-            await fetch(`http://localhost:3004/roles/${roleId}/permission`, {
+            await fetch(API+'/roles/${roleId}/permission', {
                 method: 'POST', // ou PATCH selon ce que tu choisis
                 headers: {
                     'Content-Type': 'application/json',

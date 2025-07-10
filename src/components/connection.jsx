@@ -74,7 +74,7 @@ const Connection = () => {
                 return;
             }
 
-            const response = await fetch(lien.url + "connection/user", {
+            const response = await fetch(lien.url + "/connection/user", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ jwt })
@@ -125,7 +125,7 @@ const Connection = () => {
         }
 
         try {
-            const response = await fetch(lien.url + 'connection/login', {
+            const response = await fetch(lien.url + '/connection/login', {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password })
@@ -185,7 +185,7 @@ const Connection = () => {
         if (!ValidateEmail(forgotEmail)) return;
 
         try {
-            const response = await fetch(lien.url + 'connection/forgot-password', {
+            const response = await fetch(lien.url + '/connection/forgot-password', {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email: forgotEmail })
