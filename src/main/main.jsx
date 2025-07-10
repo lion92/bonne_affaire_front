@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import {BrowserRouter, Route, Routes} from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import '../css/index.css';
 import AddDeal from "../components/AddDeal.jsx";
@@ -12,6 +12,7 @@ import Layout from "../components/Layout.jsx";
 import AddCategory from "../components/AddCategory.jsx";
 import UserProfile from "../components/userProfile.jsx";
 import DealValidationPage from "../components/DealValidationPage.jsx";
+import ProtectedRoute from "../components/ProtectedRoute.jsx";
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
@@ -26,9 +27,13 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                     <Route path="/home" element={<Home />} />
                     <Route path="/add" element={<AddDeal />} />
                     <Route path="/deal/:id" element={<DealDetail />} />
-                    <Route path="category" element={<AddCategory />} />
                     <Route path="/profile" element={<UserProfile />} />
-                    <Route path="/validation" element={<DealValidationPage />} />
+
+                    {/* 🛡️ Routes protégées : admin ou manager */}
+                    <Route element={<ProtectedRoute allowedRoles={['admin', 'manager']} />}>
+                        <Route path="/category" element={<AddCategory />} />
+                        <Route path="/validation" element={<DealValidationPage />} />
+                    </Route>
                 </Route>
             </Routes>
         </BrowserRouter>
