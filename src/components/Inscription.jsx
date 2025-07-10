@@ -49,7 +49,7 @@ const Inscription = () => {
         setIsLoading(true);
 
         try {
-            const response = await fetch(`${lien.url}connection/signup`, {
+            const response = await fetch(`${lien.url}/connection/signup`, {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({nom, prenom, email, password})
