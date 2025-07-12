@@ -10,6 +10,8 @@ export const useUserProfileStore = create((set) => ({
     allPermissions: [],
     loading: false,
     error: null,
+    likeCounts: {}, // { [dealId]: number }
+
 
     // 🔐 Récupérer le profil de l'utilisateur connecté
     fetchProfile: async (token) => {
@@ -107,6 +109,48 @@ export const useUserProfileStore = create((set) => ({
         } catch (error) {
             set({ error: "Erreur lors de l'attribution des permissions" });
         }
+    },
+    fetchLikeCount: async (dealId) => {
+        try {
+            const res = await fetch(`${API}/likes/count/${dealId}`); // ✅ Pas besoin de token ici
+            const data = await res.json();
+            set((state) => ({
+                likeCounts: {
+                    ...state.likeCounts,
+                    [dealId]: data.count || 0,
+                },
+            }));
+        } catch (err) {
+            console.error("Erreur fetchLikeCount:", err);
+        }
+    },
+
+    toggleLike: async (dealId, token) => {
+        try {
+            const res = await fetch(`${API}/likes/${dealId}/like`, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            const data = await res.json();
+
+            // ✅ Ajout : on rafraîchit le compteur après le like
+            const resCount = await fetch(`${API}/likes/count/${dealId}`);
+            const dataCount = await resCount.json();
+
+            set((state) => ({
+                likeCounts: {
+                    ...state.likeCounts,
+                    [dealId]: dataCount.count || 0,
+                },
+            }));
+        } catch (err) {
+            console.error("Erreur toggleLike:", err);
+        }
     }
+
+
 
 }));

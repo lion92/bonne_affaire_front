@@ -2,23 +2,49 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useDealStore } from '../store/useDealStore.js';
 import { useCategoryStore } from '../store/useCategoryStore.js';
+import { useUserProfileStore } from "../store/userProfilStore.js";
+import LikeButton from "./LikeButton.jsx";
 import '../css/home.css';
-
+import {jwtDecode} from "jwt-decode";
 export default function Home() {
     const { deals, fetchActiveDeals, deleteDeal } = useDealStore();
     const { categories, fetchCategories } = useCategoryStore();
+    const { likeCounts, fetchLikeCount } = useUserProfileStore();
 
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
     const [sortBy, setSortBy] = useState('newest');
 
+    const [userRoles, setUserRoles] = useState([]);
+    useEffect(() => {
+        const token = localStorage.getItem('jwt');
+        if (token) {
+            try {
+                const decoded = jwtDecode(token);
+                console.log("Token décodé :", decoded);let roles = decoded?.roles || [];
+                const roleNames = roles.map(r => typeof r === 'string' ? r : r.name);
+                setUserRoles(roleNames);
+            } catch (err) {
+                console.error('Erreur lors du décodage du token :', err);
+                setUserRoles([]);
+            }
+        }
+    }, []);
+    // 🟢 Récupère les deals et catégories au chargement
     useEffect(() => {
         const token = localStorage.getItem("jwt");
         if (token) {
             fetchActiveDeals(token);
             if (categories.length === 0) fetchCategories(token);
         }
-    }, [fetchActiveDeals, fetchCategories, categories.length]);
+    }, []);
+
+    // 🟢 Récupère les likes dès qu'on a les deals
+    useEffect(() => {
+        deals.forEach((deal) => {
+            fetchLikeCount(deal.id);
+        });
+    }, [deals]);
 
     const filteredAndSortedDeals = useMemo(() => {
         let filtered = deals.filter(deal => {
@@ -194,12 +220,16 @@ export default function Home() {
                                         <Link to={`/deal/${deal.id}`} className="button small">
                                             Voir détail
                                         </Link>
-                                        <button
-                                            onClick={() => handleDelete(deal.id)}
-                                            className="button small danger"
-                                        >
-                                            Supprimer
-                                        </button>
+                                        <LikeButton dealId={deal.id}/>
+                                        <span>{likeCounts[deal.id] || 0} 👍</span>
+                                        {userRoles.includes('admin')?
+                                            <button
+                                                onClick={() => handleDelete(deal.id)}
+                                                className="button small danger"
+                                            >
+                                                Supprimer
+                                            </button>:""
+                                        }
                                     </div>
                                 </div>
                             </div>

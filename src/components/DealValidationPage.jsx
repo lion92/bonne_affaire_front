@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useDealStore } from '../store/useDealStore';
 import { jwtDecode } from 'jwt-decode';
+import lien from "./lien.js";
 
-const API_URL = 'http://localhost:3004';
+const API_URL = lien.url;
 
 const DealValidationPage = () => {
     const token = localStorage.getItem('jwt');

@@ -13,6 +13,7 @@ import AddCategory from "../components/AddCategory.jsx";
 import UserProfile from "../components/userProfile.jsx";
 import DealValidationPage from "../components/DealValidationPage.jsx";
 import ProtectedRoute from "../components/ProtectedRoute.jsx";
+import ResetPasswordForm from "../components/ResetPasswordForm.jsx";
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
@@ -21,6 +22,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                 {/* Routes sans layout */}
                 <Route path="/" element={<Connection />} />
                 <Route path="/inscription" element={<Inscription />} />
+                <Route path="/reset-password" element={<ResetPasswordForm />} />
 
                 {/* Routes avec menu */}
                 <Route element={<Layout />}>
