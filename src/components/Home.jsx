@@ -6,6 +6,7 @@ import { useUserProfileStore } from "../store/userProfilStore.js";
 import LikeButton from "./LikeButton.jsx";
 import '../css/home.css';
 import {jwtDecode} from "jwt-decode";
+import MessageBox from "./messageBox.jsx";
 export default function Home() {
     const { deals, fetchActiveDeals, deleteDeal } = useDealStore();
     const { categories, fetchCategories } = useCategoryStore();
@@ -237,6 +238,7 @@ export default function Home() {
                     </div>
                 )}
             </section>
+            <MessageBox></MessageBox>
         </main>
     );
 }

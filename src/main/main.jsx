@@ -14,6 +14,7 @@ import UserProfile from "../components/userProfile.jsx";
 import DealValidationPage from "../components/DealValidationPage.jsx";
 import ProtectedRoute from "../components/ProtectedRoute.jsx";
 import ResetPasswordForm from "../components/ResetPasswordForm.jsx";
+import MessageBoxWrapper from "../components/MessageBoxWrapper.jsx";
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
@@ -30,6 +31,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                     <Route path="/add" element={<AddDeal />} />
                     <Route path="/deal/:id" element={<DealDetail />} />
                     <Route path="/profile" element={<UserProfile />} />
+                    <Route path="/messages/:receiverId" element={<MessageBoxWrapper />} />
 
                     {/* 🛡️ Routes protégées : admin ou manager */}
                     <Route element={<ProtectedRoute allowedRoles={['admin', 'manager']} />}>
