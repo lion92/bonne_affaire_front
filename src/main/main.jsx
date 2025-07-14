@@ -31,7 +31,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                     <Route path="/add" element={<AddDeal />} />
                     <Route path="/deal/:id" element={<DealDetail />} />
                     <Route path="/profile" element={<UserProfile />} />
-                    <Route path="/messages/:receiverId" element={<MessageBoxWrapper />} />
 
                     {/* 🛡️ Routes protégées : admin ou manager */}
                     <Route element={<ProtectedRoute allowedRoles={['admin', 'manager']} />}>

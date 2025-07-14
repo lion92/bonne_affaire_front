@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import axios from 'axios';
-import { jwtDecode } from 'jwt-decode'; // ✅ Correct pour Vite + jwt-decode v4
+import { jwtDecode } from 'jwt-decode';
+import lien from "../components/lien.js"; // ✅ Correct pour Vite + jwt-decode v4
 
 export const useMessageStore = create((set, get) => ({
     messages: [],
@@ -29,7 +30,7 @@ export const useMessageStore = create((set, get) => ({
         if (!token) return;
 
         try {
-            const res = await axios.get('http://localhost:3004/connection/me', {
+            const res = await axios.get(lien.url+'/connection/me', {
                 headers: { Authorization: `Bearer ${token}` },
             });
             set({ currentUserId: res.data.id });
@@ -45,7 +46,7 @@ export const useMessageStore = create((set, get) => ({
         const { token, currentUserId } = get();
         try {
             await axios.post(
-                'http://localhost:3004/messages/send',
+                lien.url+'/messages/send',
                 { senderId: currentUserId, receiverId, content },
                 {
                     headers: { Authorization: `Bearer ${token}` },
@@ -60,7 +61,7 @@ export const useMessageStore = create((set, get) => ({
     fetchAllMessages: async () => {
         const { token } = get();
         try {
-            const res = await axios.get('http://localhost:3004/messages/all', {
+            const res = await axios.get(lien.url+'/messages/all', {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Cache-Control': 'no-cache',

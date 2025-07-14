@@ -2,6 +2,7 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useMessageStore } from '../store/useMessageStore.js';
 import axios from 'axios';
+import lien from "./lien.js";
 
 export default function Layout() {
     const navigate = useNavigate();
@@ -17,7 +18,7 @@ export default function Layout() {
         setToken(jwt);
 
         axios
-            .get('http://localhost:3004/connection/me', {
+            .get(lien.url+'/connection/me', {
                 headers: { Authorization: `Bearer ${jwt}` },
             })
             .then((res) => {

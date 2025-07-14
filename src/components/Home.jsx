@@ -7,6 +7,7 @@ import LikeButton from "./LikeButton.jsx";
 import '../css/home.css';
 import {jwtDecode} from "jwt-decode";
 import MessageBox from "./messageBox.jsx";
+import EditableDealCard from "./EditableDealCard.jsx";
 export default function Home() {
     const { deals, fetchActiveDeals, deleteDeal } = useDealStore();
     const { categories, fetchCategories } = useCategoryStore();
@@ -190,55 +191,17 @@ export default function Home() {
                 ) : (
                     <div className="grid">
                         {filteredAndSortedDeals.map((deal) => (
-                            <div key={deal.id} className="card">
-                                {deal.imageUrl && (
-                                    <img src={deal.imageUrl} alt={deal.title} />
-                                )}
-                                <div className="card-content">
-                                    <h3>{deal.title}</h3>
-                                    <p>{deal.description || "Pas de description."}</p>
-                                    <p><strong>Prix :</strong> {deal.price} €</p>
-                                    {deal.dealUrl && (
-                                        <p>
-                                            <a
-                                                href={deal.dealUrl}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                            >
-                                                🔗 Voir l'offre
-                                            </a>
-                                        </p>
-                                    )}
-                                    <p>
-                                        <strong>Créé le :</strong>{" "}
-                                        {new Date(deal.createdAt).toLocaleDateString()}
-                                    </p>
-                                    {deal.category && (
-                                        <p><strong>Catégorie :</strong> {deal.category.name}</p>
-                                    )}
-
-                                    <div className="buttons">
-                                        <Link to={`/deal/${deal.id}`} className="button small">
-                                            Voir détail
-                                        </Link>
-                                        <LikeButton dealId={deal.id}/>
-                                        <span>{likeCounts[deal.id] || 0} 👍</span>
-                                        {userRoles.includes('admin')?
-                                            <button
-                                                onClick={() => handleDelete(deal.id)}
-                                                className="button small danger"
-                                            >
-                                                Supprimer
-                                            </button>:""
-                                        }
-                                    </div>
-                                </div>
-                            </div>
+                            <EditableDealCard
+                                key={deal.id}
+                                deal={deal}
+                                likeCount={likeCounts[deal.id]}
+                                isAdmin={userRoles.includes('admin')}
+                            />
                         ))}
                     </div>
                 )}
             </section>
-            <MessageBox></MessageBox>
+
         </main>
     );
 }

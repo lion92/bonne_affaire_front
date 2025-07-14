@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useUserProfileStore } from '../store/userProfilStore.js';
 import '../css/profile.css';
+import MessageBox from "./messageBox.jsx";
 
 const UserProfile = () => {
     const token = localStorage.getItem('jwt');
@@ -179,7 +180,7 @@ const UserProfile = () => {
                     ))}
                 </>
             )}
-
+            <MessageBox></MessageBox>
             {error && <p style={{ color: 'red' }}>{error}</p>}
         </div>
     );
