@@ -561,6 +561,82 @@ input:focus-visible {
     }
 }
 
+/* Indicateurs de validation du mot de passe */
+.password-requirements {
+    margin-top: var(--spacing-sm);
+    padding: var(--spacing-md);
+    background: var(--primary-light);
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(167, 139, 250, 0.2);
+    width: 100%;
+}
+
+.password-requirements small {
+    color: var(--text-light);
+    font-size: 0.8rem;
+    line-height: 1.4;
+}
+
+.password-requirements ul {
+    list-style: none;
+    margin: var(--spacing-sm) 0 0 0;
+    padding: 0;
+}
+
+.password-requirements li {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
+    font-size: 0.75rem;
+    transition: var(--transition);
+}
+
+.password-requirements li::before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.password-requirements li.valid::before {
+    content: '✓';
+    background: var(--success);
+    color: white;
+}
+
+.password-requirements li.invalid::before {
+    content: '×';
+    background: var(--error);
+    color: white;
+}
+
+.password-requirements li.valid {
+    color: var(--success);
+    font-weight: 500;
+}
+
+.password-requirements li.invalid {
+    color: var(--text-muted);
+}
+
+/* Animation pour les changements de statut */
+.password-requirements li.valid {
+    animation: validCheck 0.3s ease;
+}
+
+@keyframes validCheck {
+    0% { transform: scale(0.9); opacity: 0.5; }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
 /* Impression */
 @media print {
     .container2 {
@@ -570,6 +646,10 @@ input:focus-visible {
 
     .logout-button,
     .container2 button {
+        display: none;
+    }
+
+    .password-requirements {
         display: none;
     }
 }

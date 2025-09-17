@@ -35,7 +35,7 @@ function MessageBox() {
 
     const fetchUsers = async () => {
         try {
-            const res = await axios.get('http://localhost:3004/connection', {
+            const res = await axios.get('https://www.krisscode.fr/affaire/connection', {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

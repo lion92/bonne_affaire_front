@@ -10,14 +10,37 @@ const ResetPasswordForm = () => {
 
     const token = new URLSearchParams(window.location.search).get("token");
 
+    const validatePassword = (pwd) => {
+        const errors = [];
+
+        if (pwd.length < 12) {
+            errors.push("Au moins 12 caractères");
+        }
+        if (!/(?=.*[a-z])/.test(pwd)) {
+            errors.push("Au moins une lettre minuscule");
+        }
+        if (!/(?=.*[A-Z])/.test(pwd)) {
+            errors.push("Au moins une lettre majuscule");
+        }
+        if (!/(?=.*\d)/.test(pwd)) {
+            errors.push("Au moins un chiffre");
+        }
+        if (!/(?=.*[@$!%*?&])/.test(pwd)) {
+            errors.push("Au moins un caractère spécial (@$!%*?&)");
+        }
+
+        return errors;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         setMessage("");
         setSuccess(false);
 
-        if (newPassword.length < 3) {
-            setMessage("Le mot de passe doit contenir au moins 3 caractères");
+        const pwdErrors = validatePassword(newPassword);
+        if (pwdErrors.length > 0) {
+            setMessage(`Le mot de passe doit contenir : ${pwdErrors.join(", ")}`);
             return;
         }
 
@@ -63,6 +86,28 @@ const ResetPasswordForm = () => {
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
                     />
+                    <div className="password-requirements">
+                        <small>
+                            Le mot de passe doit contenir :
+                            <ul>
+                                <li className={newPassword.length >= 12 ? 'valid' : 'invalid'}>
+                                    Au moins 12 caractères
+                                </li>
+                                <li className={/(?=.*[a-z])/.test(newPassword) ? 'valid' : 'invalid'}>
+                                    Une lettre minuscule
+                                </li>
+                                <li className={/(?=.*[A-Z])/.test(newPassword) ? 'valid' : 'invalid'}>
+                                    Une lettre majuscule
+                                </li>
+                                <li className={/(?=.*\d)/.test(newPassword) ? 'valid' : 'invalid'}>
+                                    Un chiffre
+                                </li>
+                                <li className={/(?=.*[@$!%*?&])/.test(newPassword) ? 'valid' : 'invalid'}>
+                                    Un caractère spécial (@$!%*?&)
+                                </li>
+                            </ul>
+                        </small>
+                    </div>
                     <input
                         type="password"
                         placeholder="Confirmez le mot de passe"

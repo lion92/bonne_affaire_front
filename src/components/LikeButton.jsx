@@ -1,12 +1,14 @@
 import { useUserProfileStore } from "../store/userProfilStore.js";
 
-export default function LikeButton({ dealId }) {
+export default function LikeButton({ linkId, dealId }) {
     const token = localStorage.getItem("jwt");
     const { toggleLike, fetchLikeCount } = useUserProfileStore();
 
+    const id = linkId || dealId; // Support both props for backward compatibility
+
     const handleLike = async () => {
-        await toggleLike(dealId, token);
-        await fetchLikeCount(dealId); // <-- mettre à jour après le like
+        await toggleLike(id, token);
+        await fetchLikeCount(id); // <-- mettre à jour après le like
     };
 
     return (

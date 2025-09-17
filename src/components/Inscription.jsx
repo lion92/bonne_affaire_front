@@ -22,6 +22,28 @@ const Inscription = () => {
         return valid;
     };
 
+    const validatePassword = (pwd) => {
+        const errors = [];
+
+        if (pwd.length < 12) {
+            errors.push("Au moins 12 caractères");
+        }
+        if (!/(?=.*[a-z])/.test(pwd)) {
+            errors.push("Au moins une lettre minuscule");
+        }
+        if (!/(?=.*[A-Z])/.test(pwd)) {
+            errors.push("Au moins une lettre majuscule");
+        }
+        if (!/(?=.*\d)/.test(pwd)) {
+            errors.push("Au moins un chiffre");
+        }
+        if (!/(?=.*[@$!%*?&])/.test(pwd)) {
+            errors.push("Au moins un caractère spécial (@$!%*?&)");
+        }
+
+        return errors;
+    };
+
     const validateForm = () => {
         let valid = true;
         if (!nom) {
@@ -33,10 +55,13 @@ const Inscription = () => {
             valid = false;
         } else setPrenomError("");
         if (!validateEmail(email)) valid = false;
-        if (password.length < 3) {
-            setPasswordError("Le mot de passe doit comporter au moins 3 caractères");
+
+        const pwdErrors = validatePassword(password);
+        if (pwdErrors.length > 0) {
+            setPasswordError(`Le mot de passe doit contenir : ${pwdErrors.join(", ")}`);
             valid = false;
         } else setPasswordError("");
+
         return valid;
     };
 
@@ -127,6 +152,28 @@ const Inscription = () => {
                             className={passwordError ? 'error' : ''}
                         />
                         <label>Mot de passe</label>
+                        <div className="password-requirements">
+                            <small>
+                                Le mot de passe doit contenir :
+                                <ul>
+                                    <li className={password.length >= 12 ? 'valid' : 'invalid'}>
+                                        Au moins 12 caractères
+                                    </li>
+                                    <li className={/(?=.*[a-z])/.test(password) ? 'valid' : 'invalid'}>
+                                        Une lettre minuscule
+                                    </li>
+                                    <li className={/(?=.*[A-Z])/.test(password) ? 'valid' : 'invalid'}>
+                                        Une lettre majuscule
+                                    </li>
+                                    <li className={/(?=.*\d)/.test(password) ? 'valid' : 'invalid'}>
+                                        Un chiffre
+                                    </li>
+                                    <li className={/(?=.*[@$!%*?&])/.test(password) ? 'valid' : 'invalid'}>
+                                        Un caractère spécial (@$!%*?&)
+                                    </li>
+                                </ul>
+                            </small>
+                        </div>
                         {passwordError && <p className="error">{passwordError}</p>}
                     </div>
 

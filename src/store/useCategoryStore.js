@@ -84,4 +84,15 @@ export const useCategoryStore = create((set) => ({
             set({ error: err.message, loading: false });
         }
     },
+
+    // Route publique pour les catégories
+    fetchPublicCategories: async () => {
+        set({ loading: true, error: null });
+        try {
+            const res = await axios.get(`${API_URL}/public`);
+            set({ categories: res.data, loading: false });
+        } catch (err) {
+            set({ error: err.message, loading: false });
+        }
+    },
 }));
