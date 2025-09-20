@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { useMessageStore } from '../store/useMessageStore.js';
 import axios from 'axios';
 
@@ -6,23 +6,55 @@ function MessageBox() {
     const [text, setText] = useState('');
     const { messages, currentUserId, fetchAllMessages, sendMessage, token } = useMessageStore();
     const [allUsers, setAllUsers] = useState([]);
+    const [isActive, setIsActive] = useState(true);
     const bottomRef = useRef(null);
     const previousMessagesCount = useRef(messages.length);
+    const intervalRef = useRef(null);
 
     // 📨 Charger les messages et les utilisateurs une seule fois au début
     useEffect(() => {
-        fetchAllMessages();
-        fetchUsers();
-    }, []);
-
-    // 🔁 Rafraîchir les messages toutes les 5 secondes
-    useEffect(() => {
-        const interval = setInterval(() => {
-            console.log('🔁 fetchAllMessages déclenché');
+        if (token) {
             fetchAllMessages();
-        }, 5000);
-        return () => clearInterval(interval);
-    }, []);
+            fetchUsers();
+        }
+    }, [token]);
+
+    // 🔁 Rafraîchir les messages seulement si l'onglet est actif et le token existe
+    useEffect(() => {
+        if (!token || !isActive) return;
+
+        const startPolling = () => {
+            if (intervalRef.current) clearInterval(intervalRef.current);
+
+            intervalRef.current = setInterval(() => {
+                if (document.visibilityState === 'visible' && isActive) {
+                    fetchAllMessages();
+                }
+            }, 10000); // Réduit de 5s à 10s
+        };
+
+        startPolling();
+
+        // Écouter la visibilité de l'onglet
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'visible') {
+                fetchAllMessages(); // Actualiser immédiatement au retour
+                startPolling();
+            } else {
+                if (intervalRef.current) {
+                    clearInterval(intervalRef.current);
+                    intervalRef.current = null;
+                }
+            }
+        };
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+
+        return () => {
+            if (intervalRef.current) clearInterval(intervalRef.current);
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+        };
+    }, [token, isActive, fetchAllMessages]);
 
     // 🔽 Scroll automatique si nouveaux messages
     useEffect(() => {
@@ -33,7 +65,9 @@ function MessageBox() {
         }
     }, [messages]);
 
-    const fetchUsers = async () => {
+    const fetchUsers = useCallback(async () => {
+        if (!token || allUsers.length > 0) return; // Ne charge qu'une fois
+
         try {
             const res = await axios.get('https://www.krisscode.fr/affaire/connection', {
                 headers: {
@@ -44,18 +78,19 @@ function MessageBox() {
         } catch (err) {
             console.error('❌ Erreur chargement utilisateurs :', err);
         }
-    };
+    }, [token, allUsers.length]);
 
-    const handleSend = async () => {
-        if (!text.trim()) return;
+    const handleSend = useCallback(async () => {
+        if (!text.trim() || !token) return;
+
         try {
-            await sendMessage(null, text); // ✅ Envoi global
+            await sendMessage(null, text);
             setText('');
-            fetchAllMessages();
+            // Pas besoin de fetchAllMessages() car le polling s'en charge
         } catch (err) {
             console.error('❌ Erreur envoi message global :', err);
         }
-    };
+    }, [text, token, sendMessage]);
 
     return (
         <div style={{
@@ -67,7 +102,23 @@ function MessageBox() {
             height: '100vh',
             boxSizing: 'border-box'
         }}>
-            <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>📨 Messagerie publique</h2>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                <h2 style={{ margin: 0 }}>📨 Messagerie publique</h2>
+                <button
+                    onClick={() => setIsActive(!isActive)}
+                    style={{
+                        padding: '5px 10px',
+                        backgroundColor: isActive ? '#28a745' : '#6c757d',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '5px',
+                        cursor: 'pointer',
+                        fontSize: '12px'
+                    }}
+                >
+                    {isActive ? '⏸️ Pause' : '▶️ Reprendre'}
+                </button>
+            </div>
 
             <div style={{
                 flex: 1,

@@ -92,7 +92,16 @@ export const useCategoryStore = create((set) => ({
             const res = await axios.get(`${API_URL}/public`);
             set({ categories: res.data, loading: false });
         } catch (err) {
-            set({ error: err.message, loading: false });
+            console.log("Endpoint categories/public non disponible, tentative avec categories");
+            try {
+                // Fallback vers l'endpoint général sans auth
+                const res = await axios.get(API_URL);
+                set({ categories: res.data, loading: false });
+            } catch (secondErr) {
+                console.error("Erreur lors du chargement des catégories:", secondErr);
+                // On met des catégories par défaut
+                set({ categories: [], loading: false, error: null });
+            }
         }
     },
 }));

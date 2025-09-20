@@ -1,18 +1,21 @@
 /* Variables CSS pour la cohérence */
 :root {
-    --primary-color: #ff6b35;
-    --secondary-color: #2c3e50;
-    --accent-color: #e74c3c;
-    --success-color: #27ae60;
-    --warning-color: #f39c12;
-    --light-gray: #f8f9fa;
-    --medium-gray: #6c757d;
-    --dark-gray: #343a40;
+    --primary-color: #3b82f6;
+    --secondary-color: #1e40af;
+    --accent-color: #f59e0b;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --light-gray: #f1f5f9;
+    --medium-gray: #64748b;
+    --dark-gray: #1e293b;
     --white: #ffffff;
-    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    --shadow-hover: 0 8px 15px rgba(0, 0, 0, 0.15);
-    --border-radius: 12px;
+    --shadow: 0 10px 25px rgba(59, 130, 246, 0.15);
+    --shadow-hover: 0 20px 40px rgba(59, 130, 246, 0.25);
+    --border-radius: 16px;
     --transition: all 0.3s ease;
+    --gradient-primary: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    --gradient-accent: linear-gradient(135deg, #f59e0b, #d97706);
+    --gradient-hero: linear-gradient(135deg, #6366f1, #3b82f6, #06b6d4);
 }
 
 /* Reset et styles de base */
@@ -26,7 +29,8 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
     color: var(--dark-gray);
-    background-color: var(--light-gray);
+    background: linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%);
+    min-height: 100vh;
 }
 
 /* Container principal */
@@ -39,10 +43,28 @@ body {
 
 /* Header public pour la version non connectée */
 .public-header {
-    background: var(--white);
-    border-bottom: 1px solid var(--border);
+    background: var(--gradient-primary);
+    border-bottom: 3px solid rgba(245, 158, 11, 0.3);
     box-shadow: var(--shadow);
     margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.public-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
 }
 
 .header-content {
@@ -57,10 +79,13 @@ body {
 }
 
 .header-content h1 {
-    color: var(--primary-color);
-    font-size: 1.5rem;
-    font-weight: 700;
+    color: var(--white);
+    font-size: 1.8rem;
+    font-weight: 800;
     margin: 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1;
 }
 
 .auth-buttons {
@@ -69,9 +94,24 @@ body {
 }
 
 .auth-buttons .button {
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
     text-decoration: none;
+    border: 2px solid var(--white);
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--white) !important;
+    backdrop-filter: blur(10px);
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.auth-buttons .button:hover {
+    background: var(--white);
+    color: var(--primary-color) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
 }
 
 /* CTA public */
@@ -132,13 +172,14 @@ body {
 /* Section Hero */
 .hero {
     text-align: center;
-    padding: 60px 0;
-    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    padding: 80px 0;
+    background: var(--gradient-hero);
     border-radius: var(--border-radius);
     margin: 20px 0 40px;
     color: var(--white);
     position: relative;
     overflow: hidden;
+    box-shadow: var(--shadow-hover);
 }
 
 .hero::before {
@@ -148,30 +189,52 @@ body {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-    animation: pulse 4s ease-in-out infinite;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 50%);
+    animation: heroAnimation 6s ease-in-out infinite;
 }
 
-@keyframes pulse {
-    0%, 100% { transform: scale(1); opacity: 0.3; }
-    50% { transform: scale(1.1); opacity: 0.1; }
+.hero::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent 30%, rgba(245, 158, 11, 0.1) 50%, transparent 70%);
+    animation: heroShimmer 4s ease-in-out infinite;
+}
+
+@keyframes heroAnimation {
+    0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.3; }
+    50% { transform: scale(1.2) rotate(180deg); opacity: 0.1; }
+}
+
+@keyframes heroShimmer {
+    0%, 100% { transform: translateX(-100%); }
+    50% { transform: translateX(100%); }
 }
 
 .hero h1 {
-    font-size: 3rem;
-    font-weight: 700;
-    margin-bottom: 15px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    font-size: 3.5rem;
+    font-weight: 900;
+    margin-bottom: 20px;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
     position: relative;
     z-index: 1;
+    background: linear-gradient(135deg, #ffffff, #f1f5f9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .hero p {
-    font-size: 1.2rem;
-    margin-bottom: 30px;
-    opacity: 0.9;
+    font-size: 1.4rem;
+    margin-bottom: 40px;
+    opacity: 0.95;
     position: relative;
     z-index: 1;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    font-weight: 500;
 }
 
 /* Boutons */
@@ -191,41 +254,56 @@ body {
 }
 
 .button.large {
-    padding: 16px 32px;
-    font-size: 1.1rem;
-    background: var(--white);
-    color: var(--primary-color);
-    box-shadow: var(--shadow);
+    padding: 20px 40px;
+    font-size: 1.2rem;
+    background: var(--gradient-accent);
+    color: var(--white);
+    box-shadow: var(--shadow-hover);
     position: relative;
     z-index: 1;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .button.large:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-hover);
-    background: var(--light-gray);
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 25px 50px rgba(245, 158, 11, 0.4);
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    border-color: rgba(255, 255, 255, 0.5);
 }
 
 .button.small {
-    padding: 8px 16px;
-    font-size: 0.9rem;
-    background: var(--primary-color);
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    background: var(--gradient-primary);
     color: var(--white);
     margin-right: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 .button.small:hover {
-    background: var(--secondary-color);
-    transform: translateY(-1px);
+    background: linear-gradient(135deg, #1d4ed8, #1e3a8a);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+    border-color: rgba(255, 255, 255, 0.4);
 }
 
 .button.danger {
-    background: var(--accent-color);
+    background: linear-gradient(135deg, #ef4444, #dc2626);
     color: var(--white);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
 .button.danger:hover {
-    background: #c0392b;
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+    border-color: rgba(255, 255, 255, 0.4);
 }
 
 /* Section des liens */
@@ -537,29 +615,44 @@ html {
 
 /* Variables pour les filtres */
 :root {
-    --primary-purple: #8b5cf6;
-    --light-purple: #a78bfa;
-    --lighter-purple: #c4b5fd;
-    --pale-purple: #e9d5ff;
-    --accent-purple: #9333ea;
-    --text-main: #374151;
-    --text-secondary: #6b7280;
+    --primary-purple: #6366f1;
+    --light-purple: #8b5cf6;
+    --lighter-purple: #a855f7;
+    --pale-purple: #ddd6fe;
+    --accent-purple: #7c3aed;
+    --text-main: #1e293b;
+    --text-secondary: #475569;
     --white: #ffffff;
-    --light-gray: #f9fafb;
-    --lighter-gray: #f3f4f6;
-    --border-light: #e5e7eb;
+    --light-gray: #f8fafc;
+    --lighter-gray: #f1f5f9;
+    --border-light: #e2e8f0;
     --danger-red: #ef4444;
-    --shadow-medium: 0 4px 6px -1px rgba(139, 92, 246, 0.1), 0 2px 4px -1px rgba(139, 92, 246, 0.06);
+    --shadow-medium: 0 10px 25px rgba(99, 102, 241, 0.15), 0 4px 6px rgba(99, 102, 241, 0.1);
+    --gradient-filter: linear-gradient(135deg, #6366f1, #8b5cf6);
 }
 
 /* Section des filtres */
 .filters-section {
-    background: var(--white);
-    border-radius: 16px;
-    padding: 2rem;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.9));
+    border-radius: 20px;
+    padding: 2.5rem;
     box-shadow: var(--shadow-medium);
-    border: 1px solid var(--lighter-purple);
+    border: 2px solid var(--lighter-purple);
     margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.filters-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--gradient-filter);
+    z-index: 1;
 }
 
 /* En-tête des filtres */
@@ -573,10 +666,14 @@ html {
 }
 
 .filters-header h3 {
-    color: var(--accent-purple);
-    font-size: 1.5rem;
-    font-weight: 600;
+    background: var(--gradient-filter);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 1.8rem;
+    font-weight: 800;
     margin: 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Bouton effacer les filtres */
@@ -614,10 +711,15 @@ html {
 }
 
 .filter-group label {
-    font-weight: 600;
-    color: var(--accent-purple);
-    font-size: 0.9rem;
-    margin-bottom: 0.25rem;
+    font-weight: 700;
+    background: var(--gradient-filter);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 /* Champs de saisie des filtres */
@@ -639,8 +741,8 @@ html {
     outline: none;
     border-color: var(--primary-purple);
     background: var(--white);
-    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
-    transform: translateY(-1px);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2), 0 8px 25px rgba(99, 102, 241, 0.15);
+    transform: translateY(-2px) scale(1.02);
 }
 
 .filter-input:hover,

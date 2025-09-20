@@ -6,6 +6,7 @@ const BASE_URL = lien?.url;
 
 export const useLinkStore = create((set) => ({
     links: [],
+    allLinks: [],
     loading: false,
     error: null,
 
@@ -88,7 +89,19 @@ export const useLinkStore = create((set) => ({
             const res = await axios.get(`${BASE_URL}/links/public`);
             set({links: res.data, loading: false});
         } catch (err) {
-            set({error: err.message, loading: false});
+            console.error("Erreur lors du chargement des liens publics:", err);
+            set({error: "Impossible de charger les liens publics", loading: false});
+        }
+    },
+
+    fetchAllPublicLinks: async () => {
+        set({loading: true, error: null});
+        try {
+            const res = await axios.get(`${BASE_URL}/links`);
+            set({allLinks: res.data, loading: false});
+        } catch (err) {
+            console.error("Erreur lors du chargement de tous les liens:", err);
+            set({error: "Impossible de charger tous les liens", loading: false});
         }
     },
 

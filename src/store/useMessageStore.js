@@ -7,6 +7,8 @@ export const useMessageStore = create((set, get) => ({
     messages: [],
     token: '',
     currentUserId: null,
+    lastFetch: 0,
+    isLoading: false,
 
     // ✅ Définir le token et extraire l'ID utilisateur du JWT
     setToken: (token) => {
@@ -57,9 +59,21 @@ export const useMessageStore = create((set, get) => ({
         }
     },
 
-    // ✅ Récupère tous les messages
-    fetchAllMessages: async () => {
-        const { token } = get();
+    // ✅ Récupère tous les messages avec cache et déduplication
+    fetchAllMessages: async (force = false) => {
+        const { token, lastFetch, isLoading, messages } = get();
+
+        // Cache : éviter les appels trop fréquents (< 3 secondes)
+        const now = Date.now();
+        if (!force && (now - lastFetch < 3000) && messages.length > 0) {
+            return; // Skip si récent
+        }
+
+        // Éviter les appels concurrents
+        if (isLoading) return;
+
+        set({ isLoading: true });
+
         try {
             const res = await axios.get(lien.url+'/messages/all', {
                 headers: {
@@ -67,9 +81,21 @@ export const useMessageStore = create((set, get) => ({
                     'Cache-Control': 'no-cache',
                 },
             });
-            set({ messages: res.data });
+
+            // Déduplication des messages par ID
+            const newMessages = res.data || [];
+            const uniqueMessages = newMessages.filter((msg, index, arr) =>
+                arr.findIndex(m => m.id === msg.id) === index
+            );
+
+            set({
+                messages: uniqueMessages,
+                lastFetch: now,
+                isLoading: false
+            });
         } catch (err) {
             console.error('❌ Erreur fetch all messages:', err);
+            set({ isLoading: false });
         }
     },
 }));

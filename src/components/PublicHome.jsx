@@ -6,7 +6,7 @@ import PublicLinkCard from "./PublicLinkCard.jsx";
 import '../css/home.css';
 
 export default function PublicHome() {
-    const { links, fetchPublicLinks, loading, error } = useLinkStore();
+    const { links, allLinks, fetchPublicLinks, fetchAllPublicLinks, loading, error } = useLinkStore();
     const { categories, fetchPublicCategories } = useCategoryStore();
 
     const [searchTerm, setSearchTerm] = useState('');
@@ -16,13 +16,21 @@ export default function PublicHome() {
     // Récupère les liens publics (sans token)
     useEffect(() => {
         fetchPublicLinks();
+        fetchAllPublicLinks();
         fetchPublicCategories();
     }, []);
 
     const filteredAndSortedLinks = useMemo(() => {
-        let filtered = links.filter(link => {
-            // Ne montrer que les liens validés par les managers ET les admins
-            const isValidated = link.managerValidated && link.adminValidated;
+        // Combine both public links and all links, removing duplicates by id
+        const combinedLinks = [...links, ...allLinks];
+        const uniqueLinks = combinedLinks.filter((link, index, self) =>
+            index === self.findIndex(l => l.id === link.id)
+        );
+
+        let filtered = uniqueLinks.filter(link => {
+            // For links from /links endpoint (allLinks), show if validated is true
+            // For links from /links/public endpoint, show if managerValidated && adminValidated
+            const isValidated = link.validated === true || (link.managerValidated && link.adminValidated);
 
             const matchesSearch = link.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 (link.description && link.description.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -43,7 +51,7 @@ export default function PublicHome() {
             default:
                 return filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         }
-    }, [links, searchTerm, selectedCategory, sortBy]);
+    }, [links, allLinks, searchTerm, selectedCategory, sortBy]);
 
     const clearFilters = () => {
         setSearchTerm('');
@@ -62,7 +70,7 @@ export default function PublicHome() {
             {/* Header publique */}
             <header className="public-header">
                 <div className="header-content">
-                    <h1>Liens YouTube & LinkedIn</h1>
+                    <h1 style={{color: 'white'}}>Liens YouTube & LinkedIn</h1>
                     <div className="auth-buttons">
                         <Link to="/login" className="button small">Connexion</Link>
                         <Link to="/inscription" className="button small">S'inscrire</Link>
@@ -71,8 +79,8 @@ export default function PublicHome() {
             </header>
 
             <section className="hero">
-                <h1>Découvrez les meilleurs liens</h1>
-                <p>Explorez une collection de contenus YouTube et LinkedIn partagés par la communauté !</p>
+                <h1 style={{color: 'white'}}>Découvrez les meilleurs liens</h1>
+                <p style={{color: 'white'}}>Explorez une collection de contenus YouTube et LinkedIn partagés par la communauté !</p>
                 <div className="supported-platforms">
                     <span className="platform-tag youtube">YouTube</span>
                     <span className="platform-tag linkedin">LinkedIn</span>
@@ -87,7 +95,7 @@ export default function PublicHome() {
             <section className="filters-section">
                 <div className="filters-container">
                     <div className="filters-header">
-                        <h3>Filtrer les liens</h3>
+                        <h3 style={{color: 'white'}}>Filtrer les liens</h3>
                         {activeFiltersCount > 0 && (
                             <button onClick={clearFilters} className="button clear-filters">
                                 Effacer les filtres ({activeFiltersCount})
@@ -145,7 +153,7 @@ export default function PublicHome() {
 
             <section className="links">
                 <div className="links-header">
-                    <h2>Les liens partagés</h2>
+                    <h2 style={{color: 'white'}}>Les liens partagés</h2>
                     <div className="results-info">
                         {filteredAndSortedLinks.length} lien{filteredAndSortedLinks.length > 1 ? 's' : ''}
                         {activeFiltersCount > 0 && ' (filtrés)'}
